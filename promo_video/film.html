@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WebCoder — promo film</title>
+<style>
+@font-face{font-family:Inter;font-weight:300;src:url(assets/fonts/inter-latin-300-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:400;src:url(assets/fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:500;src:url(assets/fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:600;src:url(assets/fonts/inter-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:700;src:url(assets/fonts/inter-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:800;src:url(assets/fonts/inter-latin-800-normal.woff2) format('woff2')}
+:root{
+  --bg:#0b0b0c; --panel:#141414; --panel2:#1a1a19; --rule:#2c2c2a;
+  --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+  --accent:#3987e5; --accent-deep:#184f95; --good:#0ca30c; --bad:#d03b3b;
+  --bar:#3c3b38; --bar-base:#6a6964;
+  --mono:ui-monospace,SFMono-Regular,Menlo,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg)}
+body{font-family:Inter,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+#stage{position:absolute;inset:0;overflow:hidden;
+  background:radial-gradient(1200px 700px at 78% 18%,rgba(57,135,229,.10),transparent 60%),var(--bg)}
+.sc{position:absolute;inset:0;opacity:0}
+.kicker{font-size:20px;font-weight:650;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.h{font-weight:750;letter-spacing:-.03em;line-height:1.08}
+.sub{color:var(--ink2);font-weight:400}
+.tag-ill{display:inline-block;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--rule);border-radius:6px;padding:5px 10px}
+.panel{position:absolute;background:var(--panel);border:1px solid rgba(255,255,255,.09);border-radius:16px;overflow:hidden}
+.panel .bar{height:44px;display:flex;align-items:center;gap:8px;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.07);
+  font-size:15px;color:var(--muted);letter-spacing:.02em}
+.dots i{display:inline-block;width:11px;height:11px;border-radius:50%;background:#3a3a38;margin-right:7px}
+.foot{position:absolute;left:96px;bottom:64px;font-size:26px;color:var(--ink2)}
+.foot b{color:var(--ink);font-weight:650}
+
+/* S1 */
+#s1 .card{position:absolute;left:240px;top:250px;width:1440px;background:var(--panel);border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:44px 52px}
+#s1 .who{display:flex;align-items:center;gap:14px;font-size:20px;color:var(--muted);margin-bottom:22px}
+#s1 .who i{width:38px;height:38px;border-radius:50%;background:#2a2a28;display:grid;place-items:center;font-style:normal;color:var(--ink2);font-weight:600}
+#s1 .typed{font-size:46px;line-height:1.3;font-weight:500;letter-spacing:-.015em;min-height:120px}
+#s1 .caret{display:inline-block;width:3px;height:48px;background:var(--accent);vertical-align:-8px;margin-left:4px}
+#s1 .chips{position:absolute;left:240px;top:600px;display:flex;gap:22px}
+#s1 .chip{font-size:30px;font-weight:600;padding:16px 30px;border-radius:999px;border:2px solid var(--accent);color:var(--ink);
+  background:rgba(57,135,229,.08);display:flex;align-items:center;gap:14px}
+#s1 .chip span{font-size:20px;color:var(--accent);font-weight:700}
+#s1 .line{position:absolute;left:240px;top:780px;font-size:40px;font-weight:600;letter-spacing:-.02em;color:var(--ink2)}
+#s1 .line b{color:var(--ink)}
+
+/* S2 */
+#s2 .wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#s2 img{width:170px;height:170px;border-radius:24px;margin-bottom:34px}
+#s2 .t{font-size:150px}
+#s2 .s{font-size:36px;max-width:1300px;line-height:1.35;margin-top:22px;color:var(--ink2)}
+#s2 .a{font-size:25px;margin-top:46px;color:var(--ink)}
+#s2 .a sup{color:var(--accent);font-size:15px;font-weight:600}
+#s2 .f{font-size:21px;margin-top:12px;color:var(--muted)}
+
+/* S3 */
+#s3 .head{position:absolute;left:96px;top:80px}
+#s3 .head .h{font-size:64px;margin-top:14px}
+#s3 .ed{left:96px;top:270px;width:860px;height:470px}
+#s3 .ed pre{font-family:var(--mono);font-size:17.5px;line-height:1.62;padding:20px 24px;color:#d4d4cf;white-space:pre}
+#s3 .ed .k{color:#7fb0f0}#s3 .ed .s{color:#8fcf8f}#s3 .ed .n{color:#e8a35a}
+#s3 .term{left:96px;top:760px;width:860px;height:250px;background:#0f0f0f}
+#s3 .term pre{font-family:var(--mono);font-size:16.5px;line-height:1.55;padding:16px 24px;color:#bdbcb4;white-space:pre}
+#s3 .term .ok{color:var(--good)}
+#s3 .br{left:996px;top:270px;width:828px;height:740px}
+#s3 .br .url{flex:1;height:28px;border-radius:7px;background:#232322;color:var(--muted);font-size:14px;display:flex;align-items:center;padding:0 12px}
+#s3 .br img{position:absolute;left:0;top:44px;width:828px}#s3 .stamp{position:absolute;right:16px;bottom:16px;font-size:16px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(8,8,9,.82);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:7px 12px}
+#s3 .steps{position:absolute;right:96px;top:110px;display:flex;gap:12px}
+#s3 .step{font-size:21px;font-weight:600;padding:12px 22px;border-radius:12px;border:1px solid var(--rule);color:var(--muted)}
+#s3 .step.on{border-color:var(--accent);color:var(--ink);background:rgba(57,135,229,.12)}
+
+/* S4a */
+#s4a .head{position:absolute;left:96px;top:96px}
+#s4a .head .h{font-size:64px;margin-top:14px;max-width:1500px}
+#s4a .grid{position:absolute;left:96px;top:360px;display:grid;grid-template-columns:repeat(9,112px);gap:14px}
+#s4a .cell{height:112px;border-radius:14px;border:1px solid var(--rule);background:var(--panel);display:grid;place-items:center;
+  font-size:15px;color:var(--muted);position:relative}
+#s4a .cell .g{font-size:34px;font-weight:700;color:var(--ink)}
+#s4a .cell.on{border-color:rgba(12,163,12,.55);background:rgba(12,163,12,.10)}
+#s4a .cell .n{position:absolute;top:8px;left:11px;font-size:13px;color:var(--muted)}
+#s4a .side{position:absolute;left:1270px;top:360px;width:560px}
+#s4a .big{font-size:120px;font-weight:800;letter-spacing:-.04em;line-height:1}
+#s4a .lab{font-size:24px;color:var(--ink2);margin-top:10px}
+#s4a .vs{margin-top:46px;font-size:24px;color:var(--ink2)}
+#s4a .vs .row{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-bottom:10px;border-bottom:1px solid var(--rule)}#s4a .vs .row span{font-size:28px;color:var(--ink);font-weight:600}#s4a .vs .row b{font-size:52px;font-weight:800;color:var(--accent)}#s4a .vs .row.dim span{color:var(--ink2);font-weight:500}#s4a .vs .row.dim b{color:var(--ink2)}
+
+/* S4b */
+#s4b .head{position:absolute;left:96px;top:96px}
+#s4b .head .h{font-size:64px;margin-top:14px}
+#s4b svg{position:absolute;left:96px;top:300px}
+#s4b .note{position:absolute;left:96px;top:930px;font-size:26px;color:var(--ink2)}
+
+/* S5 */
+#s5 .head{position:absolute;left:96px;top:96px}
+#s5 .head .h{font-size:64px;margin-top:14px}
+#s5 svg{position:absolute;left:96px;top:300px}
+
+/* S6, S8, S9 charts */
+.chart-head{position:absolute;left:96px;top:96px}
+.chart-head .h{font-size:60px;margin-top:14px}
+.chart-head .sub{font-size:26px;margin-top:14px}
+.chartsvg{position:absolute;left:96px;top:330px}
+.callout{position:absolute;right:120px;top:120px;text-align:right}
+.callout .big{font-size:150px;font-weight:800;letter-spacing:-.045em;line-height:1;color:var(--accent)}
+.callout .lab{font-size:24px;color:var(--ink2);margin-top:8px}
+
+/* S7 */
+#s7 .head{position:absolute;left:96px;top:96px}
+#s7 .head .h{font-size:64px;margin-top:14px}
+#s7 .nums{position:absolute;left:96px;top:330px;display:flex;gap:90px}
+#s7 .num b{display:block;font-size:150px;font-weight:800;letter-spacing:-.045em;line-height:1}
+#s7 .num span{font-size:27px;color:var(--ink2);display:block;margin-top:12px}
+#s7 .rounds{position:absolute;left:96px;top:690px;display:flex;align-items:center;gap:18px}
+#s7 .rd{font-size:24px;font-weight:600;padding:16px 26px;border-radius:14px;border:1px solid var(--rule);color:var(--muted);background:var(--panel)}
+#s7 .rd.on{color:var(--ink);border-color:var(--accent)}
+#s7 .arrow{color:var(--muted);font-size:26px}
+#s7 .gate{font-size:15px;color:var(--good);margin-left:8px;letter-spacing:.06em}
+#s7 .starts{position:absolute;left:96px;top:830px;font-size:26px;color:var(--ink2)}
+#s7 .starts b{color:var(--ink);font-weight:600}
+
+/* S10a */
+#s10a .head{position:absolute;left:96px;top:60px}
+#s10a .head .h{font-size:52px;margin-top:10px}
+#s10a .col{position:absolute;top:210px;width:820px;height:820px}
+#s10a .col .lbl{font-size:22px;font-weight:600;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+#s10a .col .lbl em{font-style:normal;font-size:18px;font-weight:600;padding:6px 14px;border-radius:999px}
+#s10a .vp{position:relative;width:820px;height:760px;overflow:hidden;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:#fff}
+#s10a .vp img{position:absolute;left:0;top:0;width:820px}
+#s10a .fail{color:var(--bad);border:1px solid rgba(208,59,59,.6)}
+#s10a .pass{color:var(--good);border:1px solid rgba(12,163,12,.6)}
+
+/* S10b */
+#s10b .head{position:absolute;left:96px;top:60px}
+#s10b .head .h{font-size:56px;margin-top:10px;max-width:1700px}
+#s10b .wall{position:absolute;left:96px;top:250px;display:grid;grid-template-columns:repeat(8,208px);gap:12px}
+#s10b .tile{width:208px;height:250px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#fff;position:relative}
+#s10b .tile img{width:208px;display:block}
+#s10b .tile b{position:absolute;right:8px;bottom:8px;font-size:15px;font-weight:700;background:rgba(8,8,9,.82);color:#fff;padding:4px 9px;border-radius:6px}
+
+/* S11 */
+#s11 .head{position:absolute;left:72px;top:46px}
+#s11 .head .h{font-size:44px;margin-top:8px}
+#s11 .frame{position:absolute;left:72px;top:170px;width:1296px;height:854px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#000}
+#s11 .frame .bar{height:44px;display:flex;align-items:center;gap:10px;padding:0 16px;background:#161615;border-bottom:1px solid rgba(255,255,255,.07)}
+#s11 .frame .url{flex:1;height:28px;border-radius:7px;background:#232322;color:var(--muted);font-size:14px;display:flex;align-items:center;padding:0 12px}
+#s11 .frame img{position:absolute;left:0;top:44px;width:1296px;height:810px}
+#s11 .list{position:absolute;left:1416px;top:200px;width:440px}
+#s11 .it{padding:17px 20px;border-radius:12px;margin-bottom:12px;border:1px solid var(--rule);background:var(--panel);opacity:.38}
+#s11 .it .r{font-size:15px;font-weight:700;letter-spacing:.1em;color:var(--accent)}
+#s11 .it .x{font-size:22px;font-weight:600;margin-top:5px;line-height:1.25}
+#s11 .it.now{opacity:1;border-color:var(--accent);background:rgba(57,135,229,.10)}
+#s11 .it.done{opacity:.8}
+
+/* S12 */
+#s12 .wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#s12 img{width:120px;height:120px;border-radius:18px;margin-bottom:22px}
+#s12 .t{font-size:104px}
+#s12 .stats{display:flex;gap:70px;margin-top:50px}
+#s12 .st b{display:block;font-size:84px;font-weight:800;letter-spacing:-.04em;line-height:1}
+#s12 .st span{display:block;font-size:22px;color:var(--ink2);margin-top:10px}
+#s12 .a{font-size:24px;margin-top:64px}
+#s12 .a sup{color:var(--accent);font-size:14px;font-weight:600}
+#s12 .f{font-size:20px;margin-top:10px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- S1 hook -->
+<section class="sc" id="s1">
+  <div class="card">
+    <div class="who"><i>U</i>A real development request</div>
+    <div class="typed"><span id="s1t"></span><span class="caret" id="s1c"></span></div>
+  </div>
+  <div class="chips" id="s1chips">
+    <div class="chip"><span>01</span>Reproduce</div>
+    <div class="chip"><span>02</span>Generate</div>
+    <div class="chip"><span>03</span>Modify</div>
+    <div class="chip"><span>04</span>Repair</div>
+    <div class="chip"><span>05</span>Refine</div>
+  </div>
+  <div class="line" id="s1l">One request. Five capabilities. <b>One evolving application.</b></div>
+</section>
+
+<!-- S2 title -->
+<section class="sc" id="s2">
+  <div class="wrap">
+    <img src="assets/img/logo.webp" alt="" id="s2img">
+    <div class="h t" id="s2t">WebCoder</div>
+    <div class="s" id="s2s">Scaling General Frontend Development with<br>Artifact-Grounded Agentic Reinforcement Learning</div>
+    <div class="a" id="s2a">Zijun Dou<sup>1,2*</sup> &nbsp; Zhen Yang<sup>1,2*&dagger;</sup> &nbsp; Xijun Liu<sup>2,3</sup> &nbsp; Dongzhuoran Zhou<sup>4</sup> &nbsp; Aohan Zeng<sup>1,2</sup> &nbsp; Jie Tang<sup>1&dagger;</sup></div>
+    <div class="f" id="s2f">Tsinghua University &middot; Zhipu AI &middot; Beihang University &middot; University of Oslo</div>
+  </div>
+</section>
+
+<!-- S3 Webdev-World -->
+<section class="sc" id="s3">
+  <div class="head"><div class="kicker">Webdev-World</div><div class="h">One executable environment</div></div>
+  <div class="steps" id="s3steps">
+    <div class="step">Edit</div><div class="step">Build &amp; run</div><div class="step">Inspect</div><div class="step">Skills</div>
+  </div>
+  <div class="panel ed"><div class="bar"><span class="dots"><i></i><i></i><i></i></span>src/App.jsx</div><pre id="s3code"></pre></div>
+  <div class="panel term"><div class="bar"><span class="dots"><i></i><i></i><i></i></span>terminal</div><pre id="s3term"></pre></div>
+  <div class="panel br"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><div class="url">localhost:3000/#news</div></div>
+    <img src="assets/img/c22_before.webp" alt="" id="s3before"><img src="assets/img/c22_full_r5.webp" alt="" id="s3img"><div class="stamp" id="s3stamp"></div></div>
+</section>
+
+<!-- S4a verifier -->
+<section class="sc" id="s4a">
+  <div class="head"><div class="kicker">Terminal reward</div><div class="h">An independent verifier operates the running app<br>and grades every hidden checklist item</div></div>
+  <div class="grid" id="s4grid"></div>
+  <div class="side">
+    <div class="big" id="s4n">0 / 27</div>
+    <div class="lab">checklist items graded 3 of 3 &middot; Webdev-Bench task c22</div>
+    <div class="vs" id="s4vs">Requirement satisfaction on this task<div class="row"><span>WebCoder-27B</span><b>1.0</b></div><div class="row dim"><span>GPT-5.4</span><b>0.6</b></div></div>
+  </div>
+</section>
+
+<!-- S4b credit assignment -->
+<section class="sc" id="s4b">
+  <div class="head"><div class="kicker">Artifact-grounded credit assignment</div><div class="h">Credit follows what each segment did to the application</div></div>
+  <svg width="1728" height="600" id="s4svg"></svg>
+  <div class="note" id="s4note"></div>
+</section>
+
+<!-- S5 long-horizon -->
+<section class="sc" id="s5">
+  <div class="head"><div class="kicker">Long-horizon training</div><div class="h">Train on trajectories longer than one context window</div></div>
+  <svg width="1728" height="680" id="s5svg"></svg>
+</section>
+
+<!-- S6 training dynamics -->
+<section class="sc" id="s6">
+  <div class="chart-head"><div class="kicker">Training dynamics</div><div class="h">Anchor score rises in both stages</div>
+    <div class="sub">28 fixed anchor tasks, evaluated at each checkpoint</div></div>
+  <div class="callout"><div class="big" id="s6big">+0%</div><div class="lab">0.346 &rarr; 0.575, step 4 to step 29</div></div>
+  <svg class="chartsvg" width="1728" height="660" id="s6svg"></svg>
+</section>
+
+<!-- S7 Webdev-Bench -->
+<section class="sc" id="s7">
+  <div class="head"><div class="kicker">Webdev-Bench</div><div class="h">Composed development, graded on the running app</div></div>
+  <div class="nums">
+    <div class="num"><b id="s7a">0</b><span>composite tasks</span></div>
+    <div class="num"><b id="s7b">0</b><span>requirements</span></div>
+    <div class="num"><b id="s7c">0</b><span>hidden checklist items</span></div>
+  </div>
+  <div class="rounds" id="s7r">
+    <div class="rd">Round 1</div><div class="arrow">&rarr;</div>
+    <div class="rd">Round 2</div><div class="arrow">&rarr;</div>
+    <div class="rd">Round 3</div><div class="arrow">&rarr;</div>
+    <div class="rd">Round 4</div><div class="arrow">&rarr;</div>
+    <div class="rd">Final acceptance</div>
+  </div>
+  <div class="starts" id="s7s">Starts from a <b>reference screenshot</b>, a <b>text specification</b>, or an <b>existing repository</b>. Each round is gated before the next is revealed.</div>
+</section>
+
+<!-- S8a RS -->
+<section class="sc" id="s8a">
+  <div class="chart-head"><div class="kicker">Results &middot; Webdev-Bench</div><div class="h">Requirement satisfaction</div>
+    <div class="sub">40 composite tasks &middot; undelivered tasks count as 0</div></div>
+  <svg class="chartsvg" width="1728" height="680" id="s8asvg"></svg>
+</section>
+
+<!-- S8b V2W -->
+<section class="sc" id="s8b">
+  <div class="chart-head"><div class="kicker">Results &middot; Vision2Web L2</div><div class="h">Average of visual and functional score</div>
+    <div class="sub">66 multi-page sites &middot; official scorer</div></div>
+  <div class="callout"><div class="big" id="s8bbig">+0.0</div><div class="lab">over its Qwen3.8-27B base</div></div>
+  <svg class="chartsvg" width="1728" height="680" id="s8bsvg"></svg>
+</section>
+
+<!-- S9 ablation -->
+<section class="sc" id="s9">
+  <div class="chart-head"><div class="kicker">Ablations &middot; Vision2Web L2</div><div class="h">Both ingredients matter</div>
+    <div class="sub">Same initialization, data, terminal reward and hyperparameters</div></div>
+  <svg class="chartsvg" width="1728" height="560" id="s9svg"></svg>
+</section>
+
+<!-- S10a side by side -->
+<section class="sc" id="s10a">
+  <div class="head"><div class="kicker">Vision2Web &middot; wildapricot &middot; homepage</div><div class="h">Reference screenshot in, runnable site out</div></div>
+  <div class="col" style="left:96px"><div class="lbl">Reference <em class="fail">Base model: not delivered</em></div>
+    <div class="vp"><img src="assets/img/wildapricot_ref.webp" alt="" id="s10r"></div></div>
+  <div class="col" style="left:1004px"><div class="lbl">WebCoder-27B <em class="pass">Delivered &middot; VS 74.8 &middot; FS 100</em></div>
+    <div class="vp"><img src="assets/img/wildapricot_rl.webp" alt="" id="s10w"></div></div>
+</section>
+
+<!-- S10b wall -->
+<section class="sc" id="s10b">
+  <div class="head"><div class="kicker">Vision2Web</div><div class="h">24 sites where the base model delivered nothing. WebCoder delivered every one.</div></div>
+  <div class="wall" id="s10wall"></div>
+</section>
+
+<!-- S11 live -->
+<section class="sc" id="s11">
+  <div class="head"><div class="kicker">Webdev-Bench &middot; task c22 &middot; all five requirements accepted</div><div class="h">The agent&rsquo;s deliverable, running in a browser</div></div>
+  <div class="frame"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><div class="url">localhost:3000</div></div>
+    <img id="s11img" alt=""></div>
+  <div class="list" id="s11list"></div>
+</section>
+
+<!-- S12 outro -->
+<section class="sc" id="s12">
+  <div class="wrap">
+    <img src="assets/img/logo.webp" alt="">
+    <div class="h t">WebCoder</div>
+    <div class="stats">
+      <div class="st"><b>72.8</b><span>Webdev-Bench RS</span></div>
+      <div class="st"><b>62.4</b><span>Vision2Web Avg</span></div>
+      <div class="st"><b>40 / 40</b><span>Webdev-Bench tasks delivered</span></div>
+    </div>
+    <div class="a">Zijun Dou<sup>1,2*</sup> &nbsp; Zhen Yang<sup>1,2*&dagger;</sup> &nbsp; Xijun Liu<sup>2,3</sup> &nbsp; Dongzhuoran Zhou<sup>4</sup> &nbsp; Aohan Zeng<sup>1,2</sup> &nbsp; Jie Tang<sup>1&dagger;</sup></div>
+    <div class="f">Tsinghua University &middot; Zhipu AI &middot; Beihang University &middot; University of Oslo</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+// ===================================================================
+// Deterministic renderer: renderAt(t) draws the frame at time t (s).
+// Nothing animates on its own; every value is a pure function of t.
+// ===================================================================
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+const eo=x=>1-Math.pow(1-x,3);              // ease-out cubic
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const $=id=>document.getElementById(id);
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent&&parent.appendChild(e);return e;}
+const fmt1=v=>v.toFixed(1);
+
+const T={ s1:[0,8], s2:[8,12.5], s3:[12.5,24], s4a:[24,31.5], s4b:[31.5,40], s5:[40,48],
+          s6:[48,57], s7:[57,64], s8a:[64,72], s8b:[72,80], s9:[80,85.5],
+          s10a:[85.5,93], s10b:[93,98.5], s11:[98.5,114], s12:[114,120] };
+window.FILM_DURATION=120;
+
+function vis(id,t){const [a,b]=T[id];const fi=a<=0?1:seg(t,a-.3,a+.3), fo=b>=window.FILM_DURATION?(1-seg(t,b-.6,b)):(1-seg(t,b-.3,b+.3));const o=Math.min(fi,fo);$(id).style.opacity=o;return o>0?Math.max(0,t-a):null;}
+
+// ---------- S1 ----------
+const S1TEXT='Rebuild the homepage from this reference, add a product section, integrate the cart, and preserve menu interactions.';
+function r1(lt){
+  const n=Math.round(S1TEXT.length*seg(lt,.6,3.6));
+  $('s1t').textContent=S1TEXT.slice(0,n);
+  $('s1c').style.opacity=(lt<3.8)?((Math.floor(lt*2.2)%2)?.15:1):0;
+  [...$('s1chips').children].forEach((c,i)=>{const p=eo(seg(lt,3.8+i*.28,4.4+i*.28));c.style.opacity=p;c.style.transform=`translateY(${(1-p)*24}px)`;});
+  const p=eo(seg(lt,5.6,6.4));$('s1l').style.opacity=p;$('s1l').style.transform=`translateY(${(1-p)*18}px)`;
+}
+
+// ---------- S2 ----------
+function r2(lt){
+  const a=eo(seg(lt,.1,.9)),b=eo(seg(lt,.4,1.2)),c=eo(seg(lt,.8,1.6)),d=eo(seg(lt,1.3,2.1));
+  $('s2img').style.opacity=a;$('s2img').style.transform=`scale(${.85+.15*a})`;
+  $('s2t').style.opacity=b;$('s2t').style.transform=`translateY(${(1-b)*22}px)`;
+  $('s2s').style.opacity=c;$('s2a').style.opacity=d;$('s2f').style.opacity=d;
+}
+
+// ---------- S3 ----------
+const CODE=[
+ ['n','const NEWS_PAGE_SIZE = 9'],[''],
+ ['k','function News({ cat, sort, page, saved, onCat, onSort, onPage }) {'],
+ ['','  const filtered = NEWS_ARTICLES.filter((a) =>'],
+ ['','    cat === \'all\' || a.cat === cat)'],
+ ['','  const sorted = [...filtered].sort((a, b) => {'],
+ ['s','    if (sort === \'longest\') {'],
+ ['','      if (b.min !== a.min) return b.min - a.min'],
+ ['','    }'],
+ ['','    return a.date < b.date ? 1 : -1'],
+ ['','  })'],
+ ['','  const totalPages = Math.ceil(sorted.length / NEWS_PAGE_SIZE)'],
+ ['','  const savedCount = NEWS_ARTICLES.filter((a) =>'],
+ ['','    saved.has(a.id)).length'],
+];
+const TERM=[['','$ npx vite build'],['','vite v5.4.21 building for production...'],['ok','✓ 51 modules transformed.'],
+ ['','dist/index.html                 0.48 kB'],['','dist/assets/index-BbnAgAfS.js  164.17 kB'],['ok','✓ built in 7.75s']];
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function r3(lt){
+  const nl=Math.floor(CODE.length*seg(lt,.5,5.2));
+  $('s3code').innerHTML=CODE.slice(0,nl).map(([c,s])=>c?`<span class="${c}">${esc(s||'')}</span>`:esc(s||'')).join('\n');
+  const nt=Math.floor(TERM.length*seg(lt,5.4,7.4));
+  $('s3term').innerHTML=TERM.slice(0,nt).map(([c,s])=>c?`<span class="${c}">${esc(s)}</span>`:esc(s)).join('\n');
+  $('s3before').style.opacity=eo(seg(lt,.3,1.0))*(1-eo(seg(lt,7.6,8.4)));const ip=eo(seg(lt,7.6,8.4));$('s3img').style.opacity=ip;$('s3stamp').textContent= lt<7.6 ? 'Starting repository' : 'After five rounds';
+  {const im=$('s3img'); const H=im.naturalHeight*828/im.naturalWidth; const target=Math.min(H-696, 1530-20); im.style.transform=`translateY(${-eio(seg(lt,8.4,11.3))*target}px)`;}
+  const stage = lt<5.3?0: lt<7.5?1: lt<10.2?2:3;
+  [...$('s3steps').children].forEach((s,i)=>s.classList.toggle('on',i===stage));
+}
+
+// ---------- S4a ----------
+(function(){const g=$('s4grid');for(let i=0;i<27;i++){const c=document.createElement('div');c.className='cell';c.innerHTML=`<span class="n">${i+1}</span><span class="g">&nbsp;</span>`;g.appendChild(c);}})();
+function r4a(lt){
+  const k=Math.floor(27*seg(lt,.9,4.6));
+  [...$('s4grid').children].forEach((c,i)=>{const on=i<k;c.classList.toggle('on',on);c.querySelector('.g').innerHTML=on?'3':'&nbsp;';});
+  $('s4n').textContent=`${k} / 27`;
+  const p=eo(seg(lt,4.9,5.7));$('s4vs').style.opacity=p;
+}
+
+// ---------- S4b ----------
+// Illustration of the mechanism: segment token lengths w_i, artifact potential Φ after each
+// segment; advantage a_i = A + κ(ΔΦ_i − mean_w ΔΦ), so the token-weighted mean stays A.
+const W4=[0.16,0.22,0.14,0.30,0.18], PHI=[0.0,0.22,0.22,0.58,0.80,0.92], A4=0.5, K4=1.6;
+const DPHI=W4.map((_,i)=>PHI[i+1]-PHI[i]);
+const MW=DPHI.reduce((s,d,i)=>s+d*W4[i],0);
+const ADV=DPHI.map(d=>A4+K4*(d-MW));
+let S4={};
+(function(){
+  const svg=$('s4svg'), X0=0, WT=1440, Ybar=520, H=40;
+  let x=X0; S4.segs=[]; S4.adv=[]; S4.lbl=[];
+  W4.forEach((w,i)=>{const ww=w*WT;
+    S4.segs.push(el('rect',{x:x+3,y:Ybar,width:ww-6,height:H,rx:8,fill:'#2b2b29'},svg));
+    el('text',{x:x+ww/2,y:Ybar+H+34,'text-anchor':'middle','font-size':20,fill:'#898781','font-family':'Inter'},svg).textContent=`segment ${i+1}`;
+    S4.adv.push(el('rect',{x:x+ww*0.18,y:Ybar,width:ww*0.64,height:0,rx:6,fill:'#3987e5'},svg));
+    S4.lbl.push(el('text',{x:x+ww/2,y:Ybar-10,'text-anchor':'middle','font-size':22,'font-weight':600,fill:'#fff','font-family':'Inter'},svg));
+    x+=ww;});
+  // potential curve (top band)
+  S4.phiPath=el('path',{d:'',fill:'none',stroke:'#0ca30c','stroke-width':4,'stroke-linejoin':'round'},svg);
+  el('text',{x:0,y:30,'font-size':22,fill:'#0ca30c','font-family':'Inter','font-weight':600},svg).textContent='Artifact progress Φ  (requirement satisfaction estimated after each segment)';
+  el('text',{x:0,y:236,'font-size':22,fill:'#3987e5','font-family':'Inter','font-weight':600},svg).textContent='Advantage per segment';S4.ref=el('line',{x1:0,x2:WT,y1:Ybar-A4*300,y2:Ybar-A4*300,stroke:'#c3c2b7','stroke-width':2,'stroke-dasharray':'10 8',opacity:0},svg);S4.refl=el('text',{x:WT+22,y:Ybar-A4*300+7,'font-size':20,fill:'#c3c2b7','font-family':'Inter',opacity:0},svg);S4.refl.textContent='uniform advantage';
+  el('line',{x1:0,x2:WT,y1:Ybar,y2:Ybar,stroke:'#3a3a38','stroke-width':2},svg);
+  S4.WT=WT;S4.Ybar=Ybar;
+  const ill=el('text',{x:WT+260,y:30,'text-anchor':'end','font-size':17,fill:'#898781','font-family':'Inter','letter-spacing':'2'},svg); ill.textContent='ILLUSTRATION';
+})();
+function r4b(lt){
+  const WT=S4.WT, top=60, hgt=120;
+  // Φ step path, drawn progressively
+  const pd=seg(lt,.5,2.6); let x=0, d=`M0 ${top+hgt-(PHI[0]*hgt)}`;
+  const total=W4.length; const upto=pd*total;
+  for(let i=0;i<total;i++){const ww=W4[i]*WT; const f=clamp(upto-i); if(f<=0)break;
+    const y0=top+hgt-PHI[i]*hgt, y1=top+hgt-PHI[i+1]*hgt;
+    d+=` L${x+ww*f} ${y0}`; if(f>=1) d+=` L${x+ww} ${y1}`; x+=ww;}
+  S4.phiPath.setAttribute('d',d);
+  // phase 1: uniform advantage; phase 2: morph into redistributed
+  const g=eo(seg(lt,2.8,3.6)), m=eio(seg(lt,4.4,6.0)); S4.ref.setAttribute('opacity',g); S4.refl.setAttribute('opacity',g);
+  ADV.forEach((a,i)=>{const v=A4+(a-A4)*m; const h=v*300*g;
+    S4.adv[i].setAttribute('height',Math.abs(h)); S4.adv[i].setAttribute('y',S4.Ybar-Math.max(h,0));
+    S4.adv[i].setAttribute('fill', v<A4-0.02&&m>0.5?'#5a5955':'#3987e5');
+    S4.lbl[i].setAttribute('y', (v<A4-0.02&&m>0.5) ? S4.Ybar-Math.max(h,0)+30 : S4.Ybar-Math.max(h,0)-12); S4.lbl[i].textContent=g>0.9?v.toFixed(2):'';});
+  $('s4note').textContent = lt<4.4 ? 'Standard GRPO: every segment of a rollout gets the same advantage.'
+                                   : 'WebCoder: changes in artifact progress redistribute it — the token-weighted mean stays the same.';
+  $('s4note').style.opacity=eo(seg(lt,2.9,3.5));
+}
+
+// ---------- S5 ----------
+let S5={};
+(function(){
+  const svg=$('s5svg'), font={'font-family':'Inter'};
+  // context window and rollout
+  el('text',{x:0,y:24,'font-size':22,fill:'#c3c2b7',...font},svg).textContent='Rollout context  116,736 tokens';
+  S5.roll=el('rect',{x:0,y:44,width:0,height:46,rx:8,fill:'#3987e5'},svg);
+  el('text',{x:0,y:146,'font-size':22,fill:'#c3c2b7',...font},svg).textContent='Training context  65,536 tokens';
+  S5.win=el('rect',{x:0,y:166,width:1640*65536/116736,height:46,rx:8,fill:'none',stroke:'#c3c2b7','stroke-width':2,'stroke-dasharray':'8 6'},svg);
+  S5.cut=el('text',{x:1640*65536/116736+20,y:198,'font-size':21,fill:'#d03b3b','font-weight':600,...font},svg);
+  // message tree
+  S5.g=el('g',{},svg);
+  const nodes=[{x:120,y:430,l:'shared history'},{x:560,y:330,l:'stage 1'},{x:560,y:530,l:'compaction'},
+               {x:1000,y:330,l:'sample A'},{x:1000,y:530,l:'stage 2'},{x:1440,y:470,l:'sample B'},{x:1440,y:600,l:'sample C'}];
+  const edges=[[0,1],[0,2],[1,3],[2,4],[4,5],[4,6]];
+  S5.edges=edges.map(([a,b])=>el('line',{x1:nodes[a].x,y1:nodes[a].y,x2:nodes[a].x,y2:nodes[a].y,stroke:'#4a4a47','stroke-width':3},S5.g));
+  S5.E=edges;S5.N=nodes;
+  S5.nodes=nodes.map((n,i)=>{const gg=el('g',{opacity:0},S5.g);
+    el('rect',{x:n.x-95,y:n.y-30,width:190,height:60,rx:12,fill:i===0?'rgba(12,163,12,.14)':'#1a1a19',stroke:i===0?'#0ca30c':'#3a3a38','stroke-width':2},gg);
+    el('text',{x:n.x,y:n.y+8,'text-anchor':'middle','font-size':21,fill:'#fff','font-weight':600,...font},gg).textContent=n.l; return gg;});
+  S5.note=el('text',{x:0,y:670,'font-size':25,fill:'#c3c2b7',...font},svg);
+})();
+function r5(lt){
+  const p=eio(seg(lt,.3,2.2)); S5.roll.setAttribute('width',1640*p);
+  S5.cut.textContent = lt>2.3 && lt<3.6 ? 'linear truncation drops everything past here' : '';
+  const t2=seg(lt,3.6,6.6);
+  S5.E.forEach(([a,b],i)=>{const f=eo(clamp(t2*S5.E.length-i)); const A=S5.N[a],B=S5.N[b];
+    const e=S5.edges[i]; e.setAttribute('x2',A.x+(B.x-A.x)*f); e.setAttribute('y2',A.y+(B.y-A.y)*f);});
+  S5.nodes.forEach((n,i)=>n.setAttribute('opacity', i===0? eo(seg(lt,3.4,3.9)) : eo(clamp(t2*S5.E.length-(i-1)))));
+  S5.note.textContent = lt<3.4 ? '' : 'Compaction keeps the session going; the message tree trains each stage as its own sample, shared history once.';
+}
+
+// ---------- charts helpers ----------
+function hbars(svgId, rows, opts){
+  const svg=$(svgId), rowH=opts.rowH||62, labW=opts.labW||440, max=opts.max, W=opts.W||1150;
+  const out=[];
+  rows.forEach((r,i)=>{const y=i*rowH;
+    const t=el('text',{x:labW-24,y:y+rowH/2+8,'text-anchor':'end','font-size':26,'font-family':'Inter','font-weight':r.hl?700:500,fill:r.hl?'#fff':(r.base?'#c3c2b7':'#c3c2b7')},svg); t.textContent=r.n;
+    const b=el('rect',{x:labW,y:y+10,width:0,height:rowH-20,rx:6,fill:r.hl?'#3987e5':(r.base?'#6a6964':'#3c3b38')},svg);
+    const v=el('text',{x:labW,y:y+rowH/2+9,'font-size':26,'font-family':'Inter','font-weight':r.hl?750:600,fill:r.hl?'#fff':'#c3c2b7'},svg);
+    out.push({r,b,v,y});});
+  return {out,labW,max,W};
+}
+function drawBars(H,lt,t0,stag){
+  H.out.forEach((o,i)=>{const p=eo(seg(lt,t0+i*stag,t0+i*stag+.9)); const w=H.W*o.r.v/H.max*p;
+    o.b.setAttribute('width',Math.max(0,w)); o.v.setAttribute('x',H.labW+w+14); o.v.textContent=p>0.02?fmt1(o.r.v*p):'';});
+}
+
+// ---------- S6 anchor ----------
+let S6={};
+(function(){
+  const svg=$('s6svg'), X=s=>110+(s-1)/(30-1)*1560, Y=v=>590-(v-0.25)/(0.65-0.25)*560, font={'font-family':'Inter'};
+  el('rect',{x:X(1),y:20,width:X(17.5)-X(1),height:570,fill:'rgba(255,255,255,.025)'},svg);
+  el('line',{x1:X(17.5),x2:X(17.5),y1:20,y2:590,stroke:'#3a3a38','stroke-dasharray':'6 6','stroke-width':2},svg);
+  el('text',{x:X(9),y:52,'text-anchor':'middle','font-size':22,fill:'#898781',...font},svg).textContent='Stage 1 · single-type tasks';
+  el('text',{x:X(24),y:52,'text-anchor':'middle','font-size':22,fill:'#898781',...font},svg).textContent='Stage 2 · + composite tasks';
+  [0.3,0.4,0.5,0.6].forEach(v=>{el('line',{x1:X(1),x2:X(30),y1:Y(v),y2:Y(v),stroke:'#222221','stroke-width':1.5},svg);
+    el('text',{x:X(1)-18,y:Y(v)+8,'text-anchor':'end','font-size':20,fill:'#898781',...font},svg).textContent=v.toFixed(1);});
+  el('line',{x1:X(1),x2:X(30),y1:590,y2:590,stroke:'#3a3a38','stroke-width':2},svg);
+  const P=[[4,0.3457],[9,0.4393],[14,0.4546],[24,0.5498],[29,0.5747]];
+  P.forEach(([s])=>el('text',{x:X(s),y:628,'text-anchor':'middle','font-size':20,fill:'#898781',...font},svg).textContent=`step ${s}`);
+  S6.path=el('path',{d:'',fill:'none',stroke:'#3987e5','stroke-width':5,'stroke-linejoin':'round','stroke-linecap':'round'},svg);
+  S6.dots=P.map(([s,v])=>{const g=el('g',{opacity:0},svg);
+    el('circle',{cx:X(s),cy:Y(v),r:11,fill:'#3987e5',stroke:'#0b0b0c','stroke-width':4},g);
+    el('text',{x:X(s),y:Y(v)-24,'text-anchor':'middle','font-size':25,'font-weight':650,fill:'#fff',...font},g).textContent=v.toFixed(3);return g;});
+  S6.P=P.map(([s,v])=>[X(s),Y(v)]);
+})();
+function r6(lt){
+  const p=seg(lt,.6,5.0), n=S6.P.length-1, u=p*n; let d=`M${S6.P[0][0]} ${S6.P[0][1]}`;
+  for(let i=0;i<n;i++){const f=clamp(u-i); if(f<=0)break; const [x0,y0]=S6.P[i],[x1,y1]=S6.P[i+1]; d+=` L${x0+(x1-x0)*f} ${y0+(y1-y0)*f}`;}
+  S6.path.setAttribute('d',d);
+  S6.dots.forEach((g,i)=>g.setAttribute('opacity',eo(clamp((u-i)*3+1))));
+  $('s6big').textContent=`+${(66.2*eo(seg(lt,1.0,5.2))).toFixed(1)}%`;
+}
+
+// ---------- S7 ----------
+function r7(lt){
+  const p=eo(seg(lt,.4,2.6));
+  $('s7a').textContent=Math.round(40*p); $('s7b').textContent=Math.round(188*p); $('s7c').textContent=Math.round(1125*p).toLocaleString('en-US');
+  const rs=$('s7r').querySelectorAll('.rd'); const k=Math.floor(seg(lt,2.8,5.4)*rs.length*1.0001);
+  rs.forEach((r,i)=>r.classList.toggle('on',i<k)); $('s7r').style.opacity=eo(seg(lt,2.6,3.0));
+  $('s7s').style.opacity=eo(seg(lt,4.6,5.4));
+}
+
+// ---------- S8a / S8b / S9 data (Table 1 and the ablation paragraph) ----------
+const RS=[{n:'WebCoder-27B',v:72.8,hl:1},{n:'Claude-Opus-4.8',v:65.1},{n:'Qwen3.8-27B (base)',v:64.8,base:1},{n:'GPT-5.4',v:59.6},
+          {n:'Gemini-3-Flash',v:56.6},{n:'GPT-5',v:53.5},{n:'Seed-1.8',v:52.6},{n:'Gemini-3-Pro',v:48.0},{n:'Kimi-K2.5',v:46.8}];
+const V2W=[{n:'Claude-Opus-4.8',v:62.5},{n:'WebCoder-27B',v:62.4,hl:1},{n:'GPT-5.4',v:57.9},{n:'MiMo-V2.5',v:52.4},
+           {n:'Qwen3.5-397B-A17B',v:51.4},{n:'Kimi-K2.5',v:48.1},{n:'GPT-5',v:44.0},{n:'Qwen3.8-27B (base)',v:41.1,base:1}];
+const ABL=[{n:'WebCoder-27B (full)',v:62.4,hl:1},{n:'w/o compaction',v:54.9},{n:'w/o artifact-grounded credit',v:52.6},{n:'Qwen3.8-27B (base)',v:41.1,base:1}];
+const H8a=hbars('s8asvg',RS,{max:80,rowH:72}), H8b=hbars('s8bsvg',V2W,{max:80,rowH:78}), H9=hbars('s9svg',ABL,{max:80,rowH:110,labW:520,W:1080});
+function r8a(lt){drawBars(H8a,lt,.4,.12);}
+function r8b(lt){drawBars(H8b,lt,.4,.12); $('s8bbig').textContent='+'+(21.3*eo(seg(lt,1.4,3.4))).toFixed(1);}
+let S9d=null;
+function r9(lt){drawBars(H9,lt,.3,.18);
+  if(!S9d){const svg=$('s9svg');S9d=[1,2].map(i=>el('text',{x:0,y:H9.out[i].y+110/2+9,'font-size':24,'font-family':'Inter','font-weight':700,fill:'#d03b3b'},svg));}
+  [[1,'−7.5'],[2,'−9.8']].forEach(([i,s],k)=>{const o=H9.out[i]; const w=H9.W*o.r.v/H9.max; S9d[k].setAttribute('x',H9.labW+w+100);
+    S9d[k].textContent=s; S9d[k].setAttribute('opacity',eo(seg(lt,1.8,2.4)));});
+}
+
+// ---------- S10a ----------
+function r10a(lt){
+  const p=eio(seg(lt,.8,6.6));
+  const R=$('s10r'),Wb=$('s10w');
+  const maxR=Math.max(0,R.naturalHeight*820/R.naturalWidth-760), maxW=Math.max(0,Wb.naturalHeight*820/Wb.naturalWidth-760);
+  // the two pages differ in height, so each scrolls the same fraction of its own length
+  const FR=0.62;
+  R.style.transform=`translateY(${-maxR*FR*p}px)`; Wb.style.transform=`translateY(${-maxW*FR*p}px)`;
+}
+
+// ---------- S10b ----------
+let WALL=[];
+function r10b(lt){
+  WALL.forEach((t,i)=>{const p=eo(seg(lt,.3+i*.07,.9+i*.07)); t.style.opacity=p; t.style.transform=`translateY(${(1-p)*30}px) scale(${.94+.06*p})`;});
+}
+
+// ---------- S11 ----------
+const MARKS={hero:1.52,primer:3.02,newsroom:5.37,research:7.58,readingtime:9.31,readlater:11.02,all_next:12.74,reset:15.27,end:17.59};
+const LIST=[['primer','Requirement 1','PRIMER scrolls to its section'],['newsroom','Requirement 5','Newsroom entry in the nav'],
+            ['research','Requirement 4','Category filters with live counts'],['readingtime','Requirement 4','A second sort order'],
+            ['readlater','Requirement 4','Read-later marks, counted'],['all_next','Requirement 4','Nine per page, paginated'],
+            ['reset','Requirement 5','Nav resets the view, keeps the marks']];
+(function(){const L=$('s11list');LIST.forEach(([k,r,x])=>{const d=document.createElement('div');d.className='it';d.dataset.k=k;d.innerHTML=`<div class="r">${r.toUpperCase()}</div><div class="x">${x}</div>`;L.appendChild(d);});})();
+const CLIP0=1.4, CLIPN=552;
+async function r11(lt){
+  const ct=CLIP0+lt; const idx=clamp(Math.round(ct*30)+1,1,CLIPN);
+  const img=$('s11img'); const src=`assets/clips/c22/${String(idx).padStart(4,'0')}.jpg`;
+  if(img.dataset.src!==src){img.dataset.src=src; img.src=src; try{await img.decode();}catch(e){}}
+  let cur=-1; LIST.forEach(([k],i)=>{if(ct>=MARKS[k]-.15)cur=i;});
+  [...$('s11list').children].forEach((d,i)=>{d.classList.toggle('now',i===cur); d.classList.toggle('done',i<cur);});
+}
+
+// ---------- S12 ----------
+function r12(lt){const p=eo(seg(lt,.1,1.0)); $('s12').querySelector('.wrap').style.transform=`scale(${.96+.04*p})`;}
+
+// ---------- master ----------
+const R={s1:r1,s2:r2,s3:r3,s4a:r4a,s4b:r4b,s5:r5,s6:r6,s7:r7,s8a:r8a,s8b:r8b,s9:r9,s10a:r10a,s10b:r10b,s11:r11,s12:r12};
+window.renderAt=async function(t){
+  for(const id in T){const lt=vis(id,t); if(lt!==null){await R[id](lt);}}
+  return true;
+};
+
+// ---------- preload everything before the first frame ----------
+window.filmReady=(async()=>{
+  const meta=await (await fetch('assets/wall/meta.json')).json();
+  const wall=$('s10wall');
+  meta.forEach(m=>{const d=document.createElement('div');d.className='tile';d.style.opacity=0;
+    d.innerHTML=`<img src="assets/wall/${String(m.i).padStart(2,'0')}.webp" alt=""><b>${m.avg.toFixed(1)}</b>`;wall.appendChild(d);});
+  WALL=[...wall.children];
+  await document.fonts.ready;
+  const imgs=[...document.images].filter(i=>i.getAttribute('src'));
+  await Promise.all(imgs.map(i=>i.decode().catch(()=>{})));
+  await window.renderAt(0);
+  return {walls:meta.length, images:imgs.length};
+})();
+</script>
+</body>
+</html>

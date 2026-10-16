@@ -1,0 +1,21 @@
+# secrets — never commit
+.env
+.env.*
+.cc_env*
+*api_key*
+*.pem
+*.key
+
+# python / editor / os
+__pycache__/
+*.pyc
+.DS_Store
+*.swp
+
+# promo video: large inputs and intermediates stay out of the tree.
+# These patterns are deliberately scoped to promo_video/ — the project page
+# videos under docs/static/video/ ARE tracked.
+promo_video/assets/clips/c22/
+promo_video/assets/music/*.wav
+promo_video/*.mp4
+promo_video/*.webm

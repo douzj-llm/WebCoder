@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WebCoder: Scaling General Frontend Development with Artifact-Grounded Agentic Reinforcement Learning</title>
+
+<meta name="description" content="WebCoder is a general frontend development agent trained with artifact-grounded agentic reinforcement learning. It raises requirement satisfaction on Webdev-Bench from 64.8 to 72.8 and the Vision2Web average score from 41.1 to 62.4.">
+<meta name="author" content="Zijun Dou, Zhen Yang, Xijun Liu, Dongzhuoran Zhou, Aohan Zeng, Jie Tang">
+
+<!-- TODO before publishing: set og:url / og:image to the live GitHub Pages URL. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="WebCoder: Scaling General Frontend Development with Artifact-Grounded Agentic Reinforcement Learning">
+<meta property="og:description" content="A general frontend development agent trained with artifact-grounded agentic reinforcement learning.">
+<meta property="og:image" content="static/images/motivation1.webp">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/webp" href="static/images/logo.webp">
+<link rel="stylesheet" href="static/css/style.css">
+</head>
+
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand"><img src="static/images/logo.webp" alt="">WebCoder</span>
+    <div class="nav-links">
+      <a href="#demo">Video</a>
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#benchmark">Webdev-Bench</a>
+      <a href="#results">Results</a>
+      <a href="#gallery">Examples</a>
+      <a href="#bibtex">BibTeX</a>
+      <button class="theme-toggle" type="button">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <img class="hero-logo" src="static/images/logo.webp" alt="WebCoder logo">
+    <h1>WebCoder: Scaling General Frontend Development with<br class="nb">Artifact-Grounded Agentic Reinforcement Learning</h1>
+    <p class="venue">Preprint &middot; under review</p>
+
+    <p class="authors">
+      Zijun Dou<sup>1,2&#42;</sup>,
+      Zhen Yang<sup>1,2&#42;&dagger;</sup>,
+      Xijun Liu<sup>2,3</sup>,
+      Dongzhuoran Zhou<sup>4</sup>,
+      Aohan Zeng<sup>1,2</sup>,
+      Jie Tang<sup>1&dagger;</sup>
+    </p>
+    <p class="affils">
+      <sup>1</sup>Tsinghua University &nbsp;
+      <sup>2</sup>Zhipu AI &nbsp;
+      <sup>3</sup>Beihang University &nbsp;
+      <sup>4</sup>University of Oslo
+    </p>
+    <p class="notes">
+      &#42; Core contributors &nbsp;&middot;&nbsp; &dagger; Corresponding authors<br>
+      Work was done when ZD, ZY, XL, AZ interned at Zhipu AI.
+    </p>
+
+    <!-- TODO: replace each href="#" below with the real URL once the artifact is public,
+         and drop the "pending" class so the button renders as active. -->
+    <div class="links">
+      <a class="btn" href="static/pdf/webcoder_paper.pdf">
+        <svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6zM14 3.5V8h4.5z"/></svg>
+        Paper
+      </a>
+      <a class="btn pending" href="#" aria-disabled="true">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.2 19.5c-.5-.2-.5-.9-.5-1.2v-2c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6 0-.6 0-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.4 9.4 0 015 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v2.9c0 .3 0 1-.6 1.2A10 10 0 0012 2z"/></svg>
+        Code
+      </a>
+      <a class="btn pending" href="#" aria-disabled="true">
+        <svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7zm0 2.3L5 8.2v7.6l7 3.9 7-3.9V8.2z"/></svg>
+        Model
+      </a>
+      <a class="btn pending" href="#" aria-disabled="true">
+        <svg viewBox="0 0 24 24"><path d="M3 3h18v4H3zm0 7h18v4H3zm0 7h11v4H3z"/></svg>
+        Webdev-Bench
+      </a>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="label">Webdev-Bench requirement satisfaction</div>
+        <div class="value">72.8</div>
+        <div class="delta">&#9650; 8.0 <span class="from">from 64.8 base</span></div>
+      </div>
+      <div class="kpi">
+        <div class="label">Vision2Web average score</div>
+        <div class="value">62.4</div>
+        <div class="delta">&#9650; 21.3 <span class="from">from 41.1 base</span></div>
+      </div>
+      <div class="kpi">
+        <div class="label">Webdev-Bench average over VS, FS, IS</div>
+        <div class="value">79.8</div>
+        <div class="delta">&#9650; 7.0 <span class="from">from 72.8 base</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="teaser">
+  <div class="wrap">
+    <figure>
+      <img src="static/images/motivation1.webp" alt="Panel (a) shows frontend reproduction, generation and modification studied as separate task categories. Panel (b) shows one user request composing those capabilities over a continuous, stateful development process with multi-turn multimodal refinement.">
+      <figcaption>
+        <b>From isolated frontend tasks to general frontend development.</b>
+        (a) Existing work typically studies frontend reproduction, generation, and modification as
+        separate task categories. (b) In real-world development, a single user request often requires
+        multiple capabilities to be composed within a continuous, stateful, and iterative development
+        process, followed by multi-turn and multimodal refinement over the evolving application state.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <h2>Video</h2>
+    <figure class="video">
+      <video controls preload="none" playsinline
+             poster="static/images/promo_poster.webp"
+             width="1920" height="1080">
+        <source src="static/video/webcoder_promo_1080p.webm" type="video/webm">
+        <source src="static/video/webcoder_promo_1080p.mp4" type="video/mp4">
+        <p>Your browser cannot play embedded video.
+           <a href="static/video/webcoder_promo_1080p.mp4">Download the MP4</a> instead.</p>
+      </video>
+      <figcaption>
+        <b>WebCoder in two minutes.</b>
+        Every number is taken from the paper. The editor, terminal and browser footage come
+        from a real Webdev-Bench deliverable: the agent's own source, rebuilt and driven in a
+        browser. The Vision2Web pages are the official reference screenshots and the agent's
+        rendered output. The credit-assignment panel is an illustration of the mechanism, and
+        is labelled as such.
+        Music: &ldquo;Inspired&rdquo; by Kevin MacLeod (<a href="https://incompetech.com">incompetech.com</a>),
+        licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="abstract">
+  <div class="wrap abstract">
+    <h2>Abstract</h2>
+    <p class="lead">
+      Real-world frontend development requires agents to compose reproduction, generation,
+      modification, and repair over an evolving application state. Learning a general policy for this
+      process requires translating heterogeneous execution feedback into task-aligned rewards and
+      effective credit assignment across long sequences of interdependent actions.
+    </p>
+    <p>
+      We introduce <b>WebCoder</b>, a general frontend development agent trained with
+      artifact-grounded agentic reinforcement learning. Our key idea is to assess diverse development
+      activities through their effects on a shared executable artifact and its satisfaction of task
+      requirements. We build Webdev-World, an executable environment that integrates code editing,
+      application execution, browser inspection, and on-demand skills while preserving project state
+      across interactions. An independent verifier evaluates the final application against task
+      requirements to provide terminal rewards, while changes in intermediate artifact progress
+      redistribute the resulting rollout advantage across development segments. Context compaction and
+      message-tree sample construction support training on trajectories beyond a single context window
+      while avoiding repeated loss computation on shared generated history.
+    </p>
+    <p>
+      We further introduce Webdev-Bench to evaluate composed development requirements within a single
+      project. On Webdev-Bench, WebCoder-27B raises requirement satisfaction from 64.8 for its
+      Qwen3.8-27B base model to 72.8, exceeding Claude-Opus-4.8 (65.1) and GPT-5.4 (59.6); on
+      Vision2Web, it improves the average visual and functional score from 41.1 to 62.4, on par with
+      Claude-Opus-4.8. Ablation studies confirm the contributions of artifact-grounded credit
+      assignment and long-horizon training.
+    </p>
+  </div>
+</section>
+
+<section id="method">
+  <div class="wrap">
+    <h2>Method</h2>
+    <figure>
+      <img src="static/images/method_v4.webp" alt="Overview of the artifact-grounded agentic reinforcement learning framework: the agent builds a runnable project in Webdev-World, a verifier scores the final application against a checklist, artifact potentials redistribute the rollout advantage, and an ownership mask assigns tokens to training samples.">
+      <figcaption>
+        <b>Overview of our artifact-grounded agentic reinforcement learning framework.</b>
+        WebCoder builds and refines a runnable project in Webdev-World through development tools and
+        on-demand skills; an independent verifier scores the final application against the task
+        checklist, artifact-based potentials redistribute the GRPO rollout advantage across trajectory
+        segments, and an ownership mask assigns each generated token to one training sample.
+      </figcaption>
+    </figure>
+
+    <h3>Webdev-World</h3>
+    <p>
+      An executable environment that integrates code editing, application execution, browser
+      inspection, and on-demand skills, while preserving project state across interactions. The agent
+      sees the consequences of its own edits the way a developer does, through build results and the
+      rendered page.
+    </p>
+
+    <h3>Artifact-grounded reward and credit assignment</h3>
+    <p>
+      An independent verifier scores the final application against the task's requirement checklist to
+      produce the terminal reward. Changes in intermediate artifact progress then redistribute that
+      rollout advantage across development segments, so a segment that actually moved the application
+      forward is credited for it, while the token-weighted mean advantage set by the terminal reward is
+      preserved.
+    </p>
+
+    <h3>Long-horizon training</h3>
+    <p>
+      Context compaction keeps long development sessions inside the context window, and message-tree
+      sample construction lets a single trajectory train as several samples without computing the loss
+      twice on shared generated history.
+    </p>
+  </div>
+</section>
+
+<section id="benchmark">
+  <div class="wrap">
+    <h2>Webdev-Bench</h2>
+    <p>
+      Existing frontend benchmarks score one capability at a time. Webdev-Bench instead evaluates
+      composed development requirements inside a single project: 40 tasks whose requirements arrive
+      over several rounds, each with a hidden checklist, graded against the running application rather
+      than against the source code.
+    </p>
+    <div class="two-col">
+      <figure>
+        <img src="static/images/webdev-bench.webp" alt="Webdev-Bench overview: multi-round requirements over one project, evaluated on the running application against a hidden checklist.">
+        <figcaption><b>Benchmark overview.</b> Requirements accumulate over rounds within one project, and acceptance is judged on the running application.</figcaption>
+      </figure>
+      <figure>
+        <img src="static/images/fig_task_stats_en.webp" alt="Task statistics for Webdev-Bench, covering task tiers, starting conditions and requirement counts.">
+        <figcaption><b>Task statistics.</b> Tiers, starting conditions, and the distribution of requirements per task.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="wrap">
+    <h2>Results</h2>
+    <div class="table-scroll">
+      <table>
+        <caption>
+          <b>Main results on Vision2Web and Webdev-Bench.</b>
+          Vision2Web (L2-frontend, 66 titles) reports the visual score (VS), functional score (FS),
+          their average (Avg), and the delivery success rate (DSR). Webdev-Bench (40 tasks) reports
+          requirement satisfaction (RS) together with its visual (VS), functional (FS), and interaction
+          (IS) components, their average (Avg), and DSR. Undelivered tasks count as 0 in all score
+          columns.
+        </caption>
+        <thead>
+          <tr>
+            <th rowspan="2">Model</th>
+            <th class="group sep" colspan="4">Vision2Web</th>
+            <th class="group sep" colspan="6">Webdev-Bench</th>
+          </tr>
+          <tr>
+            <th class="sep">VS</th><th>FS</th><th>Avg</th><th>DSR</th>
+            <th class="sep">RS</th><th>VS</th><th>FS</th><th>IS</th><th>Avg</th><th>DSR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group-row"><td colspan="11">Proprietary models</td></tr>
+          <tr>
+            <td>Claude-Opus-4.8</td>
+            <td class="sep best">59.1</td><td>65.9</td><td class="best">62.5</td><td>98.5%</td>
+            <td class="sep second">65.1</td><td>75.0</td><td class="second">70.7</td><td>84.1</td><td class="second">73.7</td><td>100.0%</td>
+          </tr>
+          <tr>
+            <td>GPT-5.4</td>
+            <td class="sep">51.3</td><td>64.4</td><td>57.9</td><td>97.0%</td>
+            <td class="sep">59.6</td><td>72.7</td><td>70.0</td><td>81.0</td><td>70.8</td><td>100.0%</td>
+          </tr>
+          <tr>
+            <td>GPT-5</td>
+            <td class="sep">23.3</td><td>64.7</td><td>44.0</td><td>98.5%</td>
+            <td class="sep">53.5</td><td>64.0</td><td>65.8</td><td>74.6</td><td>64.5</td><td>100.0%</td>
+          </tr>
+          <tr>
+            <td>Gemini-3-Pro</td>
+            <td class="sep">13.3</td><td>14.6</td><td>14.0</td><td>65.2%</td>
+            <td class="sep">48.0</td><td>65.8</td><td>58.5</td><td>68.5</td><td>60.2</td><td>100.0%</td>
+          </tr>
+          <tr>
+            <td>Gemini-3-Flash</td>
+            <td class="sep">13.1</td><td>27.9</td><td>20.5</td><td>78.8%</td>
+            <td class="sep">56.6</td><td>65.8</td><td>64.8</td><td class="second">85.0</td><td>68.1</td><td>95.0%</td>
+          </tr>
+          <tr>
+            <td>Seed-1.8</td>
+            <td class="sep">7.0</td><td>13.3</td><td>10.2</td><td>36.4%</td>
+            <td class="sep">52.6</td><td>66.5</td><td>63.8</td><td>71.5</td><td>63.6</td><td>100.0%</td>
+          </tr>
+
+          <tr class="group-row"><td colspan="11">Open-source models</td></tr>
+          <tr>
+            <td>Kimi-K2.5</td>
+            <td class="sep">35.1</td><td>61.0</td><td>48.1</td><td>92.4%</td>
+            <td class="sep">46.8</td><td>61.5</td><td>55.0</td><td>67.7</td><td>57.7</td><td>82.5%</td>
+          </tr>
+          <tr>
+            <td>MiMo-V2.5</td>
+            <td class="sep">38.2</td><td class="second">66.5</td><td>52.4</td><td>87.9%</td>
+            <td class="sep">14.9</td><td>25.2</td><td>21.2</td><td>22.6</td><td>21.0</td><td>65.0%</td>
+          </tr>
+          <tr>
+            <td>Step-3.7-Flash</td>
+            <td class="sep">22.1</td><td>47.3</td><td>34.7</td><td>95.5%</td>
+            <td class="sep">10.8</td><td>20.0</td><td>14.0</td><td>19.0</td><td>15.9</td><td>60.0%</td>
+          </tr>
+          <tr>
+            <td>Qwen3.8-27B <span class="aside">(our base model)</span></td>
+            <td class="sep">36.4</td><td>45.7</td><td>41.1</td><td>48.5%</td>
+            <td class="sep">64.8</td><td class="second">77.9</td><td>68.8</td><td>79.8</td><td>72.8</td><td>95.0%</td>
+          </tr>
+          <tr>
+            <td>Qwen3.5-397B-A17B</td>
+            <td class="sep">35.6</td><td class="best">67.1</td><td>51.4</td><td>100.0%</td>
+            <td class="sep">28.7</td><td>39.0</td><td>31.9</td><td>36.5</td><td>34.0</td><td>80.0%</td>
+          </tr>
+          <tr>
+            <td>Qwen3.5-122B-A10B</td>
+            <td class="sep">20.2</td><td>39.0</td><td>29.6</td><td>87.9%</td>
+            <td class="sep">24.6</td><td>30.4</td><td>28.9</td><td>33.1</td><td>29.3</td><td>72.5%</td>
+          </tr>
+          <tr>
+            <td>Qwen3-VL-32B-Instruct</td>
+            <td class="sep">0.0</td><td>0.0</td><td>0.0</td><td>0.0%</td>
+            <td class="sep">2.5</td><td>6.3</td><td>5.4</td><td>4.4</td><td>4.6</td><td>50.0%</td>
+          </tr>
+          <tr>
+            <td>Qwen3-VL-8B-Instruct</td>
+            <td class="sep">0.0</td><td>0.0</td><td>0.0</td><td>0.0%</td>
+            <td class="sep">0.0</td><td>0.8</td><td>0.0</td><td>0.0</td><td>0.2</td><td>30.0%</td>
+          </tr>
+          <tr class="ours">
+            <td>WebCoder-27B</td>
+            <td class="sep second">57.7</td><td class="best">67.1</td><td class="second">62.4</td><td>80.3%</td>
+            <td class="sep best">72.8</td><td class="best">81.9</td><td class="best">73.8</td><td class="best">90.8</td><td class="best">79.8</td><td>100.0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">
+      <span class="best">Bold</span> marks the best value in a column across all models;
+      <span class="second">underline</span> marks the second best.
+    </p>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <h2>Examples</h2>
+    <figure>
+      <img src="static/images/fig_case_main.webp" alt="WebCoder on Vision2Web caplugs and Webdev-Bench task c22: the reference homepage next to WebCoder's render, and the c22 application state after each requirement round.">
+      <figcaption>
+        <b>WebCoder on Vision2Web (caplugs) and Webdev-Bench (c22).</b>
+        Left: the reference homepage of caplugs and WebCoder's render. Right: c22 states after each
+        round, each cropped to the region the requirement changes. R2 tightens the hero and removes the
+        investor row; the first attempt at R3 keeps the five &ldquo;Why SEDA&rdquo; parts in the old
+        staggered layout and is rejected by the gate, while the second attempt compacts them into two
+        rows and passes; R4 adds a filterable newsroom below the hero.
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="static/images/fig_demo_c22_en.webp" alt="Round-by-round requirements and the resulting application states for Webdev-Bench task c22.">
+      <figcaption><b>A Webdev-Bench session.</b> Requirements arrive round by round over one evolving project.</figcaption>
+    </figure>
+    <figure>
+      <img src="static/images/fig_case_v2w_gallery.webp" alt="Gallery of Vision2Web reproductions produced by WebCoder next to their reference screenshots.">
+      <figcaption><b>Vision2Web gallery.</b> Reference screenshots and WebCoder's reproductions.</figcaption>
+    </figure>
+    <figure>
+      <img src="static/images/fig_case_wb_gallery.webp" alt="Gallery of final deliverables produced by WebCoder across Webdev-Bench tasks.">
+      <figcaption><b>Webdev-Bench gallery.</b> Final deliverables across tasks.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="analysis">
+  <div class="wrap">
+    <h2>Analysis</h2>
+    <figure>
+      <img src="static/images/training_dynamics_aligned.webp" alt="Training dynamics across reinforcement learning steps, showing reward and evaluation anchor scores.">
+      <figcaption><b>Training dynamics.</b> Reward and anchor scores over reinforcement learning steps.</figcaption>
+    </figure>
+    <div class="two-col">
+      <figure>
+        <img src="static/images/ablation_all_metrics.webp" alt="Ablation study across all metrics, isolating artifact-grounded credit assignment and long-horizon training.">
+        <figcaption><b>Ablations.</b> Contributions of artifact-grounded credit assignment and long-horizon training.</figcaption>
+      </figure>
+      <figure>
+        <img src="static/images/fig_human_eval.webp" alt="Human evaluation results from pairwise comparisons between WebCoder and four opponent models.">
+        <figcaption><b>Human evaluation.</b> Pairwise preferences from annotators with frontend development experience.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="bibtex">
+  <div class="wrap">
+    <h2>BibTeX</h2>
+    <!-- TODO: fill in eprint/year once the arXiv submission has an identifier. -->
+    <div class="code-card">
+      <button class="copy-btn" type="button">Copy</button>
+<pre>@article{dou2026webcoder,
+  title   = {WebCoder: Scaling General Frontend Development with
+             Artifact-Grounded Agentic Reinforcement Learning},
+  author  = {Dou, Zijun and Yang, Zhen and Liu, Xijun and
+             Zhou, Dongzhuoran and Zeng, Aohan and Tang, Jie},
+  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  year    = {2026}
+}</pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>
+      Page content is drawn from the paper. Figures are rendered from the manuscript sources.
+    </p>
+    <p>
+      Website layout adapted from the conventions of academic project pages and released under
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+    </p>
+  </div>
+</footer>
+
+<div class="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged figure">
+  <button class="lightbox-close" type="button" aria-label="Close">&times;</button>
+  <img alt="">
+</div>
+
+<script src="static/js/main.js"></script>
+</body>
+</html>

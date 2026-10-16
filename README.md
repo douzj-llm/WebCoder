@@ -29,7 +29,7 @@ docs/.nojekyll                        tell GitHub Pages to serve files as-is
 docs/static/css/style.css             light + dark theme, layout, results table
 docs/static/js/main.js                theme toggle, figure lightbox, BibTeX copy
 docs/static/images/*.webp             figures, rendered from the manuscript sources
-docs/static/pdf/webcoder_paper.pdf    the paper, downsampled to 1.9 MB for the web
+docs/static/pdf/webcoder_paper.pdf    the paper, the full-resolution arXiv build
 docs/static/video/webcoder_promo_1080p.{mp4,webm}   the film, built from promo_video/
 ```
 
@@ -59,7 +59,7 @@ default and the toggle overrides it, remembered in `localStorage`.
 In the results table, best and second best are never carried by colour alone:
 best is bold *and* accent-coloured, second best is underlined.
 
-### Regenerating the figures and the web PDF
+### Regenerating the figures and the PDF
 
 The images are rendered from the paper's LaTeX sources. Point `PAPER` at your
 checkout of the manuscript, then for one figure:
@@ -70,14 +70,8 @@ pdftoppm -f 1 -l 1 -r 170 -png -singlefile "$PAPER/figs/<name>.pdf" /tmp/<name>
 cwebp -q 88 -metadata none /tmp/<name>.png -o docs/static/images/<name>.webp
 ```
 
-and to refresh the web copy of the paper after recompiling it:
-
-```bash
-gs -sDEVICE=pdfwrite -dPDFSETTINGS=/ebook -dColorImageResolution=144 \
-   -dGrayImageResolution=144 -dDetectDuplicateImages=true \
-   -dNOPAUSE -dQUIET -dBATCH \
-   -sOutputFile=docs/static/pdf/webcoder_paper.pdf "$PAPER/arxiv_preprint.pdf"
-```
+The paper itself is served at full resolution; after recompiling, copy the new
+build over `docs/static/pdf/webcoder_paper.pdf`.
 
 ## Still to fill in
 

@@ -8,11 +8,11 @@
 <meta name="description" content="WebCoder is a general frontend development agent trained with artifact-grounded agentic reinforcement learning. It raises requirement satisfaction on Webdev-Bench from 64.8 to 72.8 and the Vision2Web average score from 41.1 to 62.4.">
 <meta name="author" content="Zijun Dou, Zhen Yang, Xijun Liu, Dongzhuoran Zhou, Aohan Zeng, Jie Tang">
 
-<!-- TODO before publishing: set og:url / og:image to the live GitHub Pages URL. -->
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://douzj-llm.github.io/WebCoder/">
 <meta property="og:title" content="WebCoder: Scaling General Frontend Development with Artifact-Grounded Agentic Reinforcement Learning">
 <meta property="og:description" content="A general frontend development agent trained with artifact-grounded agentic reinforcement learning.">
-<meta property="og:image" content="static/images/motivation1.webp">
+<meta property="og:image" content="https://douzj-llm.github.io/WebCoder/static/images/motivation1.webp">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" type="image/webp" href="static/images/logo.webp">
@@ -41,7 +41,7 @@
   <div class="wrap">
     <img class="hero-logo" src="static/images/logo.webp" alt="WebCoder logo">
     <h1>WebCoder: Scaling General Frontend Development with<br class="nb">Artifact-Grounded Agentic Reinforcement Learning</h1>
-    <p class="venue">Preprint &middot; under review</p>
+    <p class="venue">Preprint &middot; <a href="https://arxiv.org/abs/2610.23104">arXiv:2610.23104</a></p>
 
     <p class="authors">
       Zijun Dou<sup>1,2&#42;</sup>,
@@ -62,14 +62,16 @@
       Work was done when ZD, ZY, XL, AZ interned at Zhipu AI.
     </p>
 
-    <!-- TODO: replace each href="#" below with the real URL once the artifact is public,
-         and drop the "pending" class so the button renders as active. -->
+    <!-- Model and Webdev-Bench stay "pending" until the Hugging Face repos are made
+         public: https://huggingface.co/Roy-DOU/WebCoder-27B and
+         https://huggingface.co/datasets/Roy-DOU/Webdev-Bench. To activate a button,
+         set its href and drop the "pending" class and the aria-disabled attribute. -->
     <div class="links">
       <a class="btn" href="static/pdf/webcoder_paper.pdf">
         <svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6zM14 3.5V8h4.5z"/></svg>
         Paper
       </a>
-      <a class="btn pending" href="#" aria-disabled="true">
+      <a class="btn" href="https://github.com/douzj-llm/WebCoder">
         <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.2 19.5c-.5-.2-.5-.9-.5-1.2v-2c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6 0-.6 0-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.4 9.4 0 015 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v2.9c0 .3 0 1-.6 1.2A10 10 0 0012 2z"/></svg>
         Code
       </a>
@@ -405,7 +407,6 @@
 <section id="bibtex">
   <div class="wrap">
     <h2>BibTeX</h2>
-    <!-- TODO: fill in eprint/year once the arXiv submission has an identifier. -->
     <div class="code-card">
       <button class="copy-btn" type="button">Copy</button>
 <pre>@article{dou2026webcoder,
@@ -413,7 +414,7 @@
              Artifact-Grounded Agentic Reinforcement Learning},
   author  = {Dou, Zijun and Yang, Zhen and Liu, Xijun and
              Zhou, Dongzhuoran and Zeng, Aohan and Tang, Jie},
-  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  journal = {arXiv preprint arXiv:2610.23104},
   year    = {2026}
 }</pre>
     </div>

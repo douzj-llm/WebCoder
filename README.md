@@ -7,7 +7,8 @@ Reinforcement Learning**
 Zijun Dou\*, Zhen Yang\*, Xijun Liu, Dongzhuoran Zhou, Aohan Zeng, Jie Tang
 *\*Core contributors.*
 
-Project page: *(enable GitHub Pages — see below)*
+Project page: <https://douzj-llm.github.io/WebCoder/>
+Paper: [arXiv:2610.23104](https://arxiv.org/abs/2610.23104)
 
 ## What is here
 
@@ -75,14 +76,15 @@ build over `docs/static/pdf/webcoder_paper.pdf`.
 
 ## Still to fill in
 
-Three placeholders in `docs/index.html`, each marked with a `TODO` comment:
+Two buttons in `docs/index.html` are still inactive, because the artifacts they
+point at are not public yet:
 
-1. **Link buttons.** Code, Model and Webdev-Bench carry `class="btn pending"`
-   and `href="#"`. Replace the `href`, then delete ` pending` from the class so
-   the button renders as active.
-2. **BibTeX.** The `journal` field reads `arXiv preprint arXiv:XXXX.XXXXX`.
-3. **Social preview.** `og:url` is unset and `og:image` points at a relative
-   path; both want the live absolute URL for link previews to render.
+* **Model** — <https://huggingface.co/Roy-DOU/WebCoder-27B>
+* **Webdev-Bench** — <https://huggingface.co/datasets/Roy-DOU/Webdev-Bench>
+
+Both repositories exist but are private. Once they are public, set each
+button's `href` and remove ` pending` from its class and the `aria-disabled`
+attribute, so it renders as active.
 
 ## Credits
 
@@ -98,7 +100,7 @@ Three placeholders in `docs/index.html`, each marked with a `TODO` comment:
 @article{dou2026webcoder,
   title   = {WebCoder: Scaling General Frontend Development with Artifact-Grounded Agentic Reinforcement Learning},
   author  = {Dou, Zijun and Yang, Zhen and Liu, Xijun and Zhou, Dongzhuoran and Zeng, Aohan and Tang, Jie},
-  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  journal = {arXiv preprint arXiv:2610.23104},
   year    = {2026}
 }
 ```

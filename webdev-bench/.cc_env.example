@@ -1,0 +1,7 @@
+# Template for a Claude Code environment file. Copy to .cc_env.<line> and fill in.
+# The real files are gitignored (.cc_env*) and must never be committed.
+ANTHROPIC_BASE_URL=https://your-gateway.example
+ANTHROPIC_AUTH_TOKEN=<put your key here>
+ANTHROPIC_MODEL=<your-model-name>
+IS_SANDBOX=1
+MAX_THINKING_TOKENS=0

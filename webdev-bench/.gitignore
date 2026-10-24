@@ -1,5 +1,8 @@
 # secrets -- never commit
 .cc_env*
+# ...but the placeholder template is meant to be committed
+!.cc_env.example
+!.cc_env.example
 *api_key*
 *.key
 *.pem

@@ -15,9 +15,16 @@ Paper: [arXiv:2610.23104](https://arxiv.org/abs/2610.23104)
 ```
 docs/            the project page. Served by GitHub Pages; no build step, no dependencies.
 promo_video/     the 2-minute promotional film, generated from code rather than edited.
+webdev-bench/    the evaluation harness for Webdev-Bench.
 ```
 
-Both are standalone. Open `docs/index.html` in a browser and the page works; see
+The benchmark data itself lives on Hugging Face:
+[`Roy-DOU/Webdev-Bench`](https://huggingface.co/datasets/Roy-DOU/Webdev-Bench) — the 40
+tasks, their seed projects and reference images. `webdev-bench/` holds the code that runs
+them: the multi-round runner, the judge prompts, the scoring scripts and the sandbox image
+definition. See [webdev-bench/README.md](webdev-bench/README.md) to run it.
+
+The first two are standalone. Open `docs/index.html` in a browser and the page works; see
 [promo_video/README.md](promo_video/README.md) to re-render the film.
 
 ## The project page

@@ -1,0 +1,89 @@
+# syntax=docker/dockerfile:1
+#
+# Dockerfile.wbench -- BEST-EFFORT reconstruction of vision2web-sandbox:wbench7
+#
+# IMPORTANT: the published wbench7 image was NOT built from this file. It was
+# produced by building sandbox:latest (Dockerfile.sandbox) and then applying
+# several `docker run ... && docker commit` steps over time (tags wbench2 ->
+# wbench4 -> wbench6 -> wbench7). No Dockerfile or commit log for those steps
+# survives in the repository, so this file only reconstructs what the surviving
+# scripts and notes actually document.
+#
+# What IS documented (see ../setup_infra.sh and the internal run notes):
+#   * litellm model routes were appended to /opt/litellm_cfg.yaml and committed
+#     into the image; rollback tag vision2web-sandbox:pre_wbench_<date> was kept.
+#   * The routes are OpenAI-style chat entries using hosted_vllm/<model>, an
+#     external api_base, api_key from env EVAL_API_KEY, and drop param "user".
+#
+# What is NOT recoverable from the repository (marked below):
+#   * the exact wbench2 -> wbench4 -> wbench6 -> wbench7 deltas;
+#   * any extra packages, browser builds, or startup scripts added by those commits;
+#   * whether a litellm proxy process (not just its config) is installed or
+#     launched inside the image, and by which entrypoint/script;
+#   * the exact Playwright headless-shell build number baked into each tag.
+#     (Run-time code reads CHROMIUM_EXECUTABLE, so this no longer needs pinning.)
+#
+# Usage:
+#   ./build.sh vision2web-sandbox:latest
+#   docker build -f Dockerfile.wbench \
+#       --build-arg LITELLM_API_BASE=https://your-gateway.example/v1 \
+#       -t vision2web-sandbox:wbench .
+
+FROM vision2web-sandbox:latest
+
+# Base URL for the model routes. Placeholder on purpose: the authors' run used a
+# private gateway. Pass your own OpenAI-compatible endpoint.
+ARG LITELLM_API_BASE=https://your-gateway.example/v1
+# Space-separated model names to expose through litellm.
+ARG JUDGE_ROUTES="claude-opus-4-8-medium gpt-5.5"
+
+USER root
+
+# ---- RECOVERABLE: litellm chat routes -------------------------------------
+# Mirrors setup_infra.sh: insert one YAML entry per model before the first
+# `litellm_settings:` key, skipping names that are already present.
+RUN python3 - <<'PY'
+import os
+p = '/opt/litellm_cfg.yaml'
+with open(p) as f:
+    s = f.read()
+base = os.environ['LITELLM_API_BASE']
+for name in os.environ.get('JUDGE_ROUTES', '').split():
+    if name in s:
+        continue
+    entry = (
+        '  - model_name: %s\n'
+        '    litellm_params:\n'
+        '      model: hosted_vllm/%s\n'
+        '      api_base: %s\n'
+        '      api_key: os.environ/EVAL_API_KEY\n'
+        '      additional_drop_params: ["user"]\n'
+        '    model_info:\n'
+        '      mode: chat\n' % (name, name, base)
+    )
+    s = s.replace('litellm_settings:', entry + 'litellm_settings:', 1)
+with open(p, 'w') as f:
+    f.write(s)
+print('routes:', [n for n in os.environ.get('JUDGE_ROUTES', '').split() if n in s])
+PY
+
+# ---- NOT RECOVERABLE: everything below is a placeholder ----------------
+# The internal image history may have included (unverified, do not assume):
+#
+#   # 1. litellm proxy binary/config wiring and a container entrypoint that
+#   #    starts it on an internal port.
+#   # RUN pip install --no-cache-dir 'litellm[proxy]'
+#   # COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+#   # ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+#   #
+#   # 2. Extra apt/pip/npm packages installed between wbench2 and wbench7.
+#   # RUN apt-get update && apt-get install -y --no-install-recommends <pkgs>
+#   #
+#   # 3. A pinned Playwright headless-shell build.
+#   # ENV CHROMIUM_EXECUTABLE=/opt/ms-playwright/chromium_headless_shell-<build>/...
+#
+# TODO(authors): replace this block with the real commit steps, or publish the
+# image digest so users can pull the exact artifact instead of rebuilding it.
+
+WORKDIR /workspace
+CMD ["/bin/bash"]

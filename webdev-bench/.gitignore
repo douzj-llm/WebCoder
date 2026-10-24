@@ -1,0 +1,12 @@
+# secrets -- never commit
+.cc_env*
+*api_key*
+*.key
+*.pem
+
+# run artefacts
+results/
+logs/
+*.log
+__pycache__/
+.cache/

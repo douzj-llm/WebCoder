@@ -74,16 +74,11 @@ cwebp -q 88 -metadata none /tmp/<name>.png -o docs/static/images/<name>.webp
 The paper itself is served at full resolution; after recompiling, copy the new
 build over `docs/static/pdf/webcoder_paper.pdf`.
 
-## Still to fill in
+## Reference images
 
-One button in `docs/index.html` is still inactive, because the artifact it
-points at is not public yet:
-
-* **Webdev-Bench** — <https://huggingface.co/datasets/Roy-DOU/Webdev-Bench>
-
-The repository exists but is empty and private. Once it is populated and
-public, set the button's `href` and remove ` pending` from its class and the
-`aria-disabled` attribute, so it renders as active.
+Nine of the 40 tasks are of `replicate` type and need a reference design image. Those
+images are not redistributed with the dataset because their rights have not been cleared;
+the dataset card says so and points researchers to the authors.
 
 ## Credits
 

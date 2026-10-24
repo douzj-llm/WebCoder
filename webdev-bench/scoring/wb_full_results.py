@@ -59,7 +59,10 @@ def main():
 
     def grades(line, t):
         p = results / line / t / 'report.json'
-        if not os.path.exists(p): return None, False
+        # A missing report means the run never produced this task: score it as 0 and keep it
+        # in the denominator, matching the benchmark's undelivered rule. Returning None here
+        # used to crash the caller.
+        if not os.path.exists(p): return {}, False
         m = json.load(open(p))['metrics']; g = m.get('item_grades') or {}
         if m.get('undelivered') or not g: return {}, False
         return {k: int(v) for k, v in g.items()}, True

@@ -1,5 +1,5 @@
 {
-  "WebCoder-27B": "webcoder27b_rl29_v9",
+  "WebCoder-27B": "qwen27b_rl29_v9",
   "Qwen3.8-27B (base)": "qwen27b_base_v9",
   "Claude Opus 4.8": "opus48_v9_40",
   "GPT-5.4": "gpt54_v9_40"

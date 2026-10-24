@@ -236,9 +236,10 @@ across the lines present), so they depend on the line set.
   long screenshots of real websites. They are distributed with the dataset for
   research only, not under MIT; rights remain with the site owners.
 * **Task text is English.** Requirements and checklist descriptions are English
-  translations of the Chinese originals the benchmark was authored and run in. Metric
-  values are tied to the translations shipped with the dataset, so use the published
-  task files rather than retranslating them.
+  translations of the Chinese originals the benchmark was authored and run in. The paper's
+  metric values were obtained with the original Chinese text; the translation preserves
+  task ids, item ids, milestone indices and weights, so use the published task files rather
+  than retranslating them if you need comparable numbers.
 * **Judge dependence.** Absolute scores are tied to the judge model and prompt.
   Do not compare numbers obtained with different judges or prompt variants.
 * **Denominators can shrink silently.** If a `visual.json` is missing for a

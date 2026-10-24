@@ -76,15 +76,14 @@ build over `docs/static/pdf/webcoder_paper.pdf`.
 
 ## Still to fill in
 
-Two buttons in `docs/index.html` are still inactive, because the artifacts they
-point at are not public yet:
+One button in `docs/index.html` is still inactive, because the artifact it
+points at is not public yet:
 
-* **Model** — <https://huggingface.co/Roy-DOU/WebCoder-27B>
 * **Webdev-Bench** — <https://huggingface.co/datasets/Roy-DOU/Webdev-Bench>
 
-Both repositories exist but are private. Once they are public, set each
-button's `href` and remove ` pending` from its class and the `aria-disabled`
-attribute, so it renders as active.
+The repository exists but is empty and private. Once it is populated and
+public, set the button's `href` and remove ` pending` from its class and the
+`aria-disabled` attribute, so it renders as active.
 
 ## Credits
 

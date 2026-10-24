@@ -19,65 +19,86 @@ from pathlib import Path
 DEFAULT_IMAGE = os.environ.get("WB_IMAGE", "vision2web-sandbox:latest")
 DEFAULT_ACCEPT_ENV = os.environ.get("ACCEPT_ENV", "")
 
-BUILD_PROMPT = """你是一名前端工程师，接到一份包含多个需求的开发单。请在当前仓库完成全部需求。
+# Checklist dimensions appear in Chinese in the original task data and in English
+# in the translated data. Chinese spellings are kept as \u escapes (functional,
+# coverage, interaction, visual, data respectively) so old result directories
+# still score while the source tree stays ASCII-only.
+DIM_ALIASES = {
+    "\u529f\u80fd": "functional", "functional": "functional",
+    "\u8986\u76d6": "coverage", "coverage": "coverage",
+    "\u4ea4\u4e92": "interaction", "interaction": "interaction",
+    "\u89c6\u89c9": "visual", "visual": "visual",
+    "\u6570\u636e": "data", "data": "data",
+}
 
-【需求单】
+
+def norm_dim(d):
+    """Normalize a checklist dimension (Chinese or English, any casing) to its English key."""
+    if isinstance(d, str):
+        s = d.strip()
+        return DIM_ALIASES.get(s, DIM_ALIASES.get(s.lower(), s.lower()))
+    return d
+
+BUILD_PROMPT = """You are a frontend engineer. You have been given a development spec containing multiple requirements. Please implement all requirements in the current repository.
+
+[Requirements]
 {requests}
 {seed_hint}
-【交付要求】
-1. 应用必须可运行：维护 ./start.sh（在 http://localhost:3000 前台启动服务；优先静态/开发服务器方案，避免安装系统级依赖）。
-2. 交付前自行验证：启动应用，用 playwright-cli 截图确认渲染正确、无控制台报错；涉及交互的需求实际操作一遍；验证完停掉服务（fuser -k 3000/tcp）。
-3. 全部完成后输出一行：ALL_DONE: <一句话总结>
+[Delivery requirements]
+1. The app must be runnable: maintain ./start.sh (start the service in the foreground at http://localhost:3000; prefer a static or dev-server approach and avoid installing system-level dependencies).
+2. Verify it yourself before delivery: start the app and use playwright-cli to take screenshots to confirm it renders correctly and has no console errors; for requirements that involve interaction, actually perform the interaction; stop the service once verification is done (fuser -k 3000/tcp).
+3. When everything is complete, output one line: ALL_DONE: <one-sentence summary>
 
-【规则】验收针对运行中的应用；只有用户可观察的行为算数；不要写测试文件应付验收；不要读写 .qa 目录。"""
+[Rules] Acceptance targets the running app; only user-observable behavior counts; do not write test files to pass acceptance; do not read or write the .qa directory."""
 
-ACCEPT_PROMPT = """你是一名严格的 QA 验收工程师。被测应用正运行在 http://localhost:3000 。
+ACCEPT_PROMPT = """You are a strict QA acceptance engineer. The app under test is running at http://localhost:3000 .
 
-【第一部分 · 逐需求 checklist 分档验收】
-下面是按大需求分组的验收清单（JSON）：
+[Part 1 - Item-by-item checklist, tiered acceptance]
+Below is the acceptance checklist (JSON), grouped by high-level requirement:
 {checklist}
-逐条验收：用 playwright-cli 实际操作与观察（open/click/fill/screenshot），每条至少一次截图或页面观察作为证据；交互类条目必须实际执行操作；涉及精确数值/组合状态的条目，必须实际构造该状态并核对数值。
+Accept each item: use playwright-cli to actually operate and observe (open/click/fill/screenshot), with at least one screenshot or page observation per item as evidence; interaction items must be actually performed; for items involving exact values or combined states, you must actually construct that state and check the value.
 
-每条给出 0-3 四档离散分（锚定标准，严格执行）：
-- 3 = 完全满足：可观察行为与条目要求完全一致，无可见瑕疵；
-- 2 = 基本满足：核心行为正确，但有小瑕疵（文案/样式/边缘状态的细节偏差）；
-- 1 = 部分满足：仅实现了条目的一部分，或行为不稳定、时对时错；
-- 0 = 未实现或不可用：要求的行为不存在、无效或报错。
-给 3 不需要"超出预期"，满足条目即可；降档必须附具体证据。按钮存在但点击无效不能给高档。
+Give each item a discrete score in four tiers from 0-3 (anchored rubric, strictly enforced):
+- 3 = fully satisfied: observable behavior exactly matches what the item requires, with no visible flaw;
+- 2 = basically satisfied: core behavior is correct, but there are small flaws (minor deviations in copy, style, or edge-state details);
+- 1 = partially satisfied: only part of the item is implemented, or the behavior is unstable and intermittently wrong;
+- 0 = not implemented or unusable: the required behavior is absent, has no effect, or errors.
+A 3 does not require "exceeding expectations" -- satisfying the item is enough; any downgrade must be backed by concrete evidence. A button that exists but does nothing when clicked cannot receive a high score.
 
-【第二部分 · 整站截图存档】
-验收完成后，回到首页初始状态，执行整页截图保存到 /workspace/.qa/screens/full_rep{rep}.png（目录已建好；用 playwright-cli screenshot 的整页模式）。
+[Part 2 - Full-site screenshot archive]
+After acceptance, return to the home page's initial state and take a full-page screenshot saved to /workspace/.qa/screens/full_rep{rep}.png (the directory already exists; use playwright-cli screenshot in full-page mode).
 
-【规则】严禁阅读被测仓库源码；严禁修改 .qa 以外的任何文件；一切以运行中的应用为准。
-【输出】只输出一个 JSON 对象，无 markdown 围栏：
+[Rules] Reading the source code of the repository under test is strictly forbidden; modifying any file outside .qa is strictly forbidden; everything is judged by the running app.
+[Output] Output only a single JSON object, with no markdown fences:
 {{"items": [{{"id": "...", "grade": 0-3, "evidence": "..."}}, ...]}}"""
 
 
-ACCEPT_PROMPT_STRICT = """你是一名极其严格的 QA 验收工程师（对外交付前的最后一道门）。被测应用正运行在 http://localhost:3000 。
+ACCEPT_PROMPT_STRICT = """You are an extremely strict QA acceptance engineer (the final gate before external delivery). The app under test is running at http://localhost:3000 .
 
-【第一部分 · 逐需求 checklist 分档验收（严格模式）】
-下面是按大需求分组的验收清单（JSON）：
+[Part 1 - Item-by-item checklist, tiered acceptance (strict mode)]
+Below is the acceptance checklist (JSON), grouped by high-level requirement:
 {checklist}
 
-验收方法（每条都要做）：
-1. 把该条目拆成原子断言清单（每个具体文案、数量、颜色/样式、状态、行为各算一条原子断言）；
-2. 用 playwright-cli 逐个核验：文本必须逐字对照（多字/少字/错字都算不符），数量必须实际数，
-   交互必须实际操作并截图前后状态，精确数值/组合状态必须实际构造出来核对；
-3. 默认立场是"不满足"：只有拿到明确证据才能判满足；找不到元素、构造不出状态、截图看不清，一律按该原子断言失败计。
+Acceptance method (do every one of these for each item):
+1. Break the item into a list of atomic assertions (each specific piece of copy, count, color/style, state, or behavior counts as one atomic assertion);
+2. Verify each one with playwright-cli: text must be compared word for word (extra, missing, or wrong characters all count as a mismatch), counts must actually be counted,
+   interactions must actually be performed with before/after screenshots, and exact values or combined states must actually be constructed and checked;
+3. The default position is "not satisfied": only mark it satisfied when you have clear evidence; a missing element, a state you cannot construct, or a screenshot too blurry to read all count as that atomic assertion failing.
 
-档位（严格执行，宁降勿升）：
-- 3 = 该条目全部原子断言逐一核验为真，无任何可见偏差；
-- 2 = 核心行为断言全部为真，但存在≥1处次要偏差（文案不完全一致/样式细节/边缘状态）；
-- 1 = 超过一半原子断言为真但核心行为存在缺失或不稳定；或按钮/入口存在但对应行为未能验证；
-- 0 = 核心元素或行为缺失、无效、报错，或大部分原子断言不成立。
-降档不需要犹豫；给 3 之前必须自查："我是否逐字核对了所有文案、逐个数了所有数量、实际执行了所有交互？"有任何一项没做到就不能给 3。
+Tiers (strictly enforced; prefer downgrading over upgrading):
+- 3 = every atomic assertion of the item is verified true one by one, with no visible deviation whatsoever;
+- 2 = all core-behavior assertions are true, but there is at least one minor deviation (copy not exactly identical / style detail / edge state);
+- 1 = more than half of the atomic assertions are true but the core behavior is missing or unstable; or the button/entry point exists but the corresponding behavior could not be verified;
+- 0 = the core element or behavior is missing, has no effect, or errors, or most atomic assertions do not hold.
+Do not hesitate to downgrade; before giving a 3 you must self-check: "Did I compare every piece of copy character by character, count every count, and actually perform every interaction?" If any one of these was not done, you cannot give a 3.
 
-【第二部分 · 整站截图存档】
-验收完成后，回到首页初始状态，执行整页截图保存到 /workspace/.qa/screens/full_rep{rep}.png（目录已建好；用 playwright-cli screenshot 的整页模式）。
+[Part 2 - Full-site screenshot archive]
+After acceptance, return to the home page's initial state and take a full-page screenshot saved to /workspace/.qa/screens/full_rep{rep}.png (the directory already exists; use playwright-cli screenshot in full-page mode).
 
-【规则】严禁阅读被测仓库源码；严禁修改 .qa 以外的任何文件；一切以运行中的应用为准。
-【输出】只输出一个 JSON 对象，无 markdown 围栏：
-{{"items": [{{"id": "...", "grade": 0-3, "evidence": "每档必须给具体证据，降档要指出失败的原子断言"}}, ...]}}"""
+[Rules] Reading the source code of the repository under test is strictly forbidden; modifying any file outside .qa is strictly forbidden; everything is judged by the running app.
+[Output] Output only a single JSON object, with no markdown fences:
+{{"items": [{{"id": "...", "grade": 0-3, "evidence": "each grade must be supported by concrete evidence; for downgrades, point out the atomic assertion that failed"}}, ...]}}"""
+
 
 
 def sh(cmd, timeout=120, check=False):
@@ -207,13 +228,13 @@ def main():
             sh(f"docker cp {proto} {cid}:/workspace/prototypes", timeout=300)
         repo = task_dir / "repo"
         seed_hint = "\n"
-        if repo.exists():  # brownfield: 起始仓库(修复题为已注入版本)
+        if repo.exists():  # brownfield: seed repository (for repair tasks, the version with the bug already injected)
             sh(f"docker cp {repo}/. {cid}:/workspace/", timeout=600)
-            seed_hint = "\n现有仓库已在当前目录，请在其上改造（先自行安装依赖并跑起来看看现状）。\n"
+            seed_hint = "\nAn existing repository is already in the current directory; modify it in place (install the dependencies yourself first and run it to see its current state).\n"
         if (proto / "reference.jpg").exists():
-            seed_hint += "参考截图位于 ./prototypes/reference.jpg ，请仔细查看后再动工。\n"
+            seed_hint += "The reference screenshot is at ./prototypes/reference.jpg; please look at it carefully before you start work.\n"
 
-        requests = "\n".join(f"【需求 {i+1}】{m['request']}" for i, m in enumerate(task["milestones"]))
+        requests = "\n".join(f"[Requirement {i+1}] {m['request']}" for i, m in enumerate(task["milestones"]))
         print(f"[{tid}] build ({len(task['milestones'])} reqs)", flush=True)
         out = cc(cid, a.builder_env, BUILD_PROMPT.format(requests=requests, seed_hint=seed_hint),
                  "/workspace", 3600, results_dir / "build.log")
@@ -262,7 +283,8 @@ def main():
 
         report["port_squatted"] = cid in START_APP_SQUATTED
         if not verdicts and not any(br):
-            # 应用三次都起不来 = 交付失败（对齐 Vision2Web 未交付计 0），照常落报告
+            # The app failed to start on all three attempts = delivery failure (aligned with
+            # Vision2Web, where undelivered counts as 0); still write the report as usual.
             report["metrics"] = {"RC": 0.0, "FS": 0.0, "IS": 0.0, "VS_items": 0.0, "BR": 0.0,
                                  "per_requirement": {}, "item_grades": {},
                                  "n_accept_reps": 0, "undelivered": True,
@@ -272,7 +294,9 @@ def main():
             print(f"[{tid}] UNDELIVERED (app never started) -> zero report", flush=True)
             return
         if not verdicts:
-            # 应用能起但三遍验收全无有效输出 = 验收事故，不得落报告（否则全 0 污染批次统计）
+            # The app starts but all three acceptance passes produced no valid output =
+            # acceptance incident; no report may be written (an all-zero report would
+            # pollute the batch statistics).
             (results_dir / "ACCEPT_FAILED").write_text("0 valid acceptance reps\n")
             claim.unlink(missing_ok=True)
             print(f"[{tid}] ACCEPT-FAILED (0 valid reps) — no report written, task requeueable", flush=True)
@@ -282,7 +306,7 @@ def main():
         for i in items:
             votes = [v[i["id"]] for v in verdicts if i["id"] in v]
             item_grade[i["id"]] = median(votes) if votes else 0
-        dim = {i["id"]: i["dimension"] for i in items}
+        dim = {i["id"]: norm_dim(i["dimension"]) for i in items}
         w = {i["id"]: i.get("w", 1.0) for i in items}
 
         def agg(ids):
@@ -292,9 +316,11 @@ def main():
         req_scores = {f"req{m}": agg([x["id"] for x in v]) for m, v in sorted(groups.items())}
         report["metrics"] = {
             "RC": round(sum(req_scores.values()) / len(req_scores), 4),
-            "FS": agg([i for i in dim if dim[i] in ("功能", "覆盖")]),
-            "IS": agg([i for i in dim if dim[i] == "交互"]),
-            "VS_items": agg([i for i in dim if dim[i] == "视觉"]),  # PRD/棕地的视觉条目分; 复刻题 VS 以 visual_score.py 组件分为准
+            "FS": agg([i for i in dim if dim[i] in ("functional", "coverage")]),
+            "IS": agg([i for i in dim if dim[i] == "interaction"]),
+            # VS_items: visual item score for PRD/brownfield tasks; for replicate tasks VS
+            # comes from the visual_score.py component score.
+            "VS_items": agg([i for i in dim if dim[i] == "visual"]),
             "BR": round(sum(br) / len(br), 2) if br else 0.0,
             "per_requirement": req_scores, "item_grades": item_grade,
             "n_accept_reps": len(verdicts),

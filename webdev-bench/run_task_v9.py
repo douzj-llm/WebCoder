@@ -19,46 +19,47 @@ import urllib.request
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE))
 from run_task import (sh, dexec, start_app, delivery_state, parse_obj, median,
-                      ACCEPT_PROMPT, DEFAULT_IMAGE, DEFAULT_ACCEPT_ENV)  # noqa
+                      ACCEPT_PROMPT, DEFAULT_IMAGE, DEFAULT_ACCEPT_ENV, norm_dim)  # noqa
 from run_task import START_APP_SQUATTED  # noqa
 
 POOL_PER_REQ = 1200; ROUND_CAP = 1500; MIN_ROUND = 180; MAX_ATTEMPTS = 3
-FIRST_PROMPT = """你是一名前端工程师。产品经理会一条一条地给你需求；先完成当前这一条，之后还会有后续需求（内容未知），所以请保持代码可继续演进。
+FIRST_PROMPT = """You are a frontend engineer. The product manager will give you requirements one at a time; complete the current one first, and more requirements will follow (contents unknown), so keep the code evolvable.
 
-【当前需求】
+[Current requirement]
 {req}
 {seed_hint}
-【交付要求】
-1. 应用必须可运行：维护 ./start.sh（在 http://localhost:3000 前台启动服务；优先静态/开发服务器方案）。
-2. 自行验证本条需求后停掉服务（fuser -k 3000/tcp）。
-3. 完成本条后输出一行：REQ_DONE: <一句话总结>
+[Delivery requirements]
+1. The app must be runnable: maintain ./start.sh (start the service in the foreground at http://localhost:3000; prefer a static or dev-server approach).
+2. Verify this requirement yourself, then stop the service (fuser -k 3000/tcp).
+3. After completing this requirement, output one line: REQ_DONE: <one-sentence summary>
 
-【规则】验收针对运行中的应用；只有用户可观察的行为算数；不要写测试文件应付验收；不要读写 .qa 目录。"""
-NEXT_PROMPT = """产品经理确认上一条已通过，提出了下一条需求。注意：之前完成的需求在最终验收时会全部重查，不要弄坏它们。
+[Rules] Acceptance targets the running app; only user-observable behavior counts; do not write test files to pass acceptance; do not read or write the .qa directory."""
+NEXT_PROMPT = """The product manager confirmed that the previous requirement passed and has raised the next requirement. Note: all previously completed requirements will be fully re-checked at final acceptance, so do not break them.
 
-【当前需求】
+[Current requirement]
 {req}
 
-完成后同样自行启动验证、停掉服务，并输出一行：REQ_DONE: <一句话总结>"""
-RETRY_PROMPT = """产品经理看过了，这条需求还没过，反馈如下：
+When done, likewise start the app to verify, stop the service, and output one line: REQ_DONE: <one-sentence summary>"""
+RETRY_PROMPT = """The product manager has reviewed it; this requirement has not passed yet. Feedback:
 
-【反馈】{feedback}
+[Feedback] {feedback}
 
-【仍是当前需求】
+[Still the current requirement]
 {req}
 
-请修复后自行启动验证、停掉服务，并输出一行：REQ_DONE: <一句话总结>"""
-GATE_SYS = "你是验收员。根据整页截图和页面文本，判断截图对应的实现是否满足本条需求的各验收点。只依据可观察证据；交互类验收点无法从静态截图确认时，只要相关 UI 元素存在且无明显破绽就算过。输出严格 JSON。"
-GATE_USER = """【本条需求】
+Please fix it, then start the app to verify, stop the service, and output one line: REQ_DONE: <one-sentence summary>"""
+GATE_SYS = "You are an acceptance reviewer. Based on the full-page screenshot and the page text, decide whether the implementation shown in the screenshot satisfies each acceptance point of this requirement. Rely only on observable evidence; when an interaction acceptance point cannot be confirmed from a static screenshot, pass it as long as the relevant UI element exists and shows no obvious flaw. Output strict JSON."
+GATE_USER = """[This requirement]
 {req}
 
-【验收点】
+[Acceptance points]
 {items}
 
-【页面文本与控制台错误】
+[Page text and console errors]
 {pagetext}
 
-输出 JSON：{{"pass": true/false, "feedback": "如果不通过，用产品经理口吻一句话说哪里不行（不得引用验收点原文）；通过则空串"}}"""
+Output JSON: {{"pass": true/false, "feedback": "if it fails, say in one sentence, in the product manager's voice, what is wrong (do not quote the acceptance points verbatim); if it passes, use an empty string"}}"""
+
 
 def judge_gate(url, model, req, items, png, pagetext):
     b64 = base64.b64encode(Path(png).read_bytes()).decode() if png and Path(png).exists() else None
@@ -161,9 +162,9 @@ def main():
         repo = task_dir / "repo"; seed_hint = "\n"
         if repo.exists():
             sh(f"docker cp {repo}/. {cid}:/workspace/", timeout=600)
-            seed_hint = "\n现有仓库已在当前目录，请在其上改造（先自行安装依赖并跑起来看看现状）。\n"
+            seed_hint = "\nAn existing repository is already in the current directory; modify it in place (install the dependencies yourself first and run it to see its current state).\n"
         if (proto / "reference.jpg").exists():
-            seed_hint += "参考截图位于 ./prototypes/reference.jpg ，请仔细查看后再动工。\n"
+            seed_hint += "The reference screenshot is at ./prototypes/reference.jpg; please look at it carefully before you start work.\n"
         t_all0 = time.time(); first_round = True; pool_left = pool
         for j, m in enumerate(milestones, 1):
             gate_items = "\n".join(f"- {i['description']}" for i in by_m[j])
@@ -187,7 +188,7 @@ def main():
                 up, png, pagetext = health_snap(cid, results_dir, f"req{j}_a{attempt}")
                 rec["health"] = up
                 if not up:
-                    feedback = "应用现在打不开了（localhost:3000 起不来），先把它修好让 ./start.sh 能正常启动。"
+                    feedback = "The app does not start anymore (localhost:3000 will not come up); fix it first so that ./start.sh starts normally."
                     rec["gate"] = "health_fail"
                 else:
                     g, fb = judge_gate(a.judge_url, a.judge_model, m["request"], gate_items, png, pagetext)
@@ -197,7 +198,7 @@ def main():
                         rec["gate"] = "pass"; passed = True
                     else:
                         rec["gate"] = "fail"; rec["feedback"] = fb
-                        feedback = fb or "这条需求还没做到位，请对照需求原文再检查一遍。"
+                        feedback = fb or "This requirement is not fully implemented yet; please check it again against the original requirement text."
                 rec["gate_seconds"] = round(time.time() - t_gate)
                 pool_left -= (time.time() - t_gate)
                 report["rounds"].append(rec)
@@ -254,15 +255,15 @@ def main():
         for i in items:
             votes = [v[i["id"]] for v in verdicts if i["id"] in v]
             item_grade[i["id"]] = median(votes) if votes else 0
-        dim = {i["id"]: i["dimension"] for i in items}; w = {i["id"]: i.get("w", 1.0) for i in items}
+        dim = {i["id"]: norm_dim(i["dimension"]) for i in items}; w = {i["id"]: i.get("w", 1.0) for i in items}
         def agg(ids):
             tw = sum(w[x] for x in ids)
             return round(sum(w[x] * item_grade[x] / 3 for x in ids) / tw, 4) if tw else None
         req_scores = {f"req{mm}": agg([x["id"] for x in v]) for mm, v in sorted(groups.items())}
         report["metrics"] = {"RC": round(sum(req_scores.values()) / len(req_scores), 4),
-                             "FS": agg([i for i in dim if dim[i] in ("功能", "覆盖")]),
-                             "IS": agg([i for i in dim if dim[i] == "交互"]),
-                             "VS_items": agg([i for i in dim if dim[i] == "视觉"]),
+                             "FS": agg([i for i in dim if dim[i] in ("functional", "coverage")]),
+                             "IS": agg([i for i in dim if dim[i] == "interaction"]),
+                             "VS_items": agg([i for i in dim if dim[i] == "visual"]),
                              "BR": round(sum(br) / len(br), 2) if br else 0.0,
                              "per_requirement": req_scores, "item_grades": item_grade, "n_accept_reps": len(verdicts)}
         (results_dir / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=1))

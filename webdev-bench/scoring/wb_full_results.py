@@ -17,8 +17,28 @@ Paths are relative to the current directory; override with the flags above.
 import argparse, collections, json, os
 from pathlib import Path
 
-DIMS = {'功能': 'functional', '覆盖': 'coverage', '交互': 'interaction',
-        '视觉': 'visual', '数据': 'data'}
+# Checklist dimensions appear in Chinese in the original task data and in English
+# in the translated data. Chinese spellings are kept as \u escapes (functional,
+# coverage, interaction, visual, data respectively) so old result directories
+# still score while the source tree stays ASCII-only.
+DIM_ALIASES = {
+    "\u529f\u80fd": "functional", "functional": "functional",
+    "\u8986\u76d6": "coverage", "coverage": "coverage",
+    "\u4ea4\u4e92": "interaction", "interaction": "interaction",
+    "\u89c6\u89c9": "visual", "visual": "visual",
+    "\u6570\u636e": "data", "data": "data",
+}
+DIMS = DIM_ALIASES  # kept for backwards compatibility
+
+
+def dim_key(d):
+    """Normalize a dimension value (Chinese or English, any casing); unknown -> functional."""
+    if isinstance(d, str):
+        s = d.strip()
+        return DIM_ALIASES.get(s, DIM_ALIASES.get(s.lower(), "functional"))
+    return "functional"
+
+
 FS_DIMS = {'functional', 'coverage'}; IS_DIMS = {'interaction'}; VS_DIMS = {'visual'}
 
 
@@ -52,12 +72,12 @@ def main():
         def dimscore(dimset):
             vals = []
             for r in reqs:
-                sub = [it for it in r if DIMS.get(it['dimension'], 'functional') in dimset]
+                sub = [it for it in r if dim_key(it['dimension']) in dimset]
                 if sub: vals.append(1.0 if sat(sub) else 0.0)
             return sum(vals) / len(vals) if vals else None
         item3 = {}
         for it in cl:
-            d = DIMS.get(it['dimension'], 'functional'); item3.setdefault(d, [0, 0]); item3[d][1] += 1
+            d = dim_key(it['dimension']); item3.setdefault(d, [0, 0]); item3[d][1] += 1
             item3[d][0] += (g.get(it['id'], 0) == 3)
         return dict(RS=RS, FS=dimscore(FS_DIMS), IS=dimscore(IS_DIMS), VS=dimscore(VS_DIMS),
                     deliv=deliv, item3=item3)

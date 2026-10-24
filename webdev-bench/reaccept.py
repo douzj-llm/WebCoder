@@ -15,7 +15,7 @@ HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE))
 from run_task import (sh, dexec, cc, start_app, START_APP_SQUATTED, parse_obj, median,
                       ACCEPT_PROMPT as ACCEPT_PROMPT_V1, ACCEPT_PROMPT_STRICT,
-                      DEFAULT_IMAGE, DEFAULT_ACCEPT_ENV)  # noqa
+                      DEFAULT_IMAGE, DEFAULT_ACCEPT_ENV, norm_dim)  # noqa
 
 
 def main():
@@ -109,15 +109,15 @@ def main():
         for i in items:
             votes = [v[i["id"]] for v in verdicts if i["id"] in v]
             item_grade[i["id"]] = median(votes) if votes else 0
-        dim = {i["id"]: i["dimension"] for i in items}; w = {i["id"]: i.get("w", 1.0) for i in items}
+        dim = {i["id"]: norm_dim(i["dimension"]) for i in items}; w = {i["id"]: i.get("w", 1.0) for i in items}
         def agg(ids):
             tw = sum(w[x] for x in ids)
             return round(sum(w[x] * item_grade[x] / 3 for x in ids) / tw, 4) if tw else None
         req_scores = {f"req{m}": agg([x["id"] for x in v]) for m, v in sorted(groups.items())}
         report["metrics"] = {"RC": round(sum(req_scores.values()) / len(req_scores), 4),
-                             "FS": agg([i for i in dim if dim[i] in ("功能", "覆盖")]),
-                             "IS": agg([i for i in dim if dim[i] == "交互"]),
-                             "VS_items": agg([i for i in dim if dim[i] == "视觉"]),
+                             "FS": agg([i for i in dim if dim[i] in ("functional", "coverage")]),
+                             "IS": agg([i for i in dim if dim[i] == "interaction"]),
+                             "VS_items": agg([i for i in dim if dim[i] == "visual"]),
                              "BR": round(sum(br) / len(br), 2) if br else 0.0,
                              "per_requirement": req_scores, "item_grades": item_grade, "n_accept_reps": len(verdicts)}
         (outdir / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=1))
